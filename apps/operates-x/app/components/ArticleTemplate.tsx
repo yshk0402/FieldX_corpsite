@@ -12,7 +12,7 @@ type ArticleTemplateProps = {
 const categoryMeta = {
   blog: {
     path: "/blog",
-    label: "ブログ",
+    label: "記事",
     fallbackThumbnail: "/images/operates-x/placeholders/blog-cover.svg"
   },
   case: {

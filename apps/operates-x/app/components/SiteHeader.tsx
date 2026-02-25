@@ -8,7 +8,7 @@ type SiteHeaderProps = {
 const links = [
   { href: "/news", label: "ニュース" },
   { href: "/case", label: "導入事例" },
-  { href: "/blog", label: "ブログ" }
+  { href: "/blog", label: "記事" }
 ] as const;
 
 export function SiteHeader({ currentPath }: SiteHeaderProps) {

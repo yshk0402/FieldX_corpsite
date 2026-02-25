@@ -77,7 +77,7 @@ function pickHomeNewsItems(): HomeNewsItem[] {
     ),
     ...getBlogArticles().map((article) =>
       toHomeNewsItem(article, {
-        label: "ブログ",
+        label: "記事",
         hrefPrefix: "/blog",
         fallbackThumbnail: "/images/operates-x/placeholders/blog-cover.svg"
       })

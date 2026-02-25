@@ -5,8 +5,8 @@ import { SiteHeader } from "../components/SiteHeader";
 import { formatDisplayDate, getBlogArticles } from "../lib/articles";
 
 export const metadata: Metadata = {
-  title: "ブログ | AImate",
-  description: "AImateのブログ一覧ページです。"
+  title: "記事 | AImate",
+  description: "AImateの記事一覧ページです。"
 };
 
 export default function BlogPage() {
@@ -18,13 +18,13 @@ export default function BlogPage() {
         <section className="fx-listing-hero" aria-labelledby="blog-page-title">
           <SiteHeader currentPath="/blog" />
           <div className="fx-listing-title-block">
-            <p className="fx-listing-eyebrow">blog</p>
+            <p className="fx-listing-eyebrow">article</p>
             <h1 id="blog-page-title" className="fx-listing-title">
-              ブログ
+              記事
             </h1>
           </div>
         </section>
-        <section className="fx-listing-section" aria-label="ブログ記事一覧">
+        <section className="fx-listing-section" aria-label="記事一覧">
           <div className="fx-listing-grid">
             {blogArticles.map((article) => (
               <article key={article.slug} className="fx-listing-card">
