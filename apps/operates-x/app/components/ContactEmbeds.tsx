@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+import { trackEvent } from "../lib/analytics";
 
 declare global {
   interface Window {
@@ -30,8 +32,45 @@ function loadTallyEmbeds() {
 }
 
 export function TallyRequestEmbed() {
+  const hasTrackedSubmitRef = useRef(false);
+
   useEffect(() => {
+    trackEvent("contact_page_view", { source: "contact_page" });
     loadTallyEmbeds();
+
+    const onMessage = (event: MessageEvent) => {
+      const payload = event.data;
+      let submitDetected = false;
+      let formId: string | undefined;
+
+      if (typeof payload === "string") {
+        submitDetected = payload.includes("Tally.FormSubmitted");
+      } else if (payload && typeof payload === "object") {
+        const eventName =
+          "event" in payload && typeof payload.event === "string"
+            ? payload.event
+            : "type" in payload && typeof payload.type === "string"
+              ? payload.type
+              : "";
+
+        if (eventName === "Tally.FormSubmitted") {
+          submitDetected = true;
+        }
+
+        if ("data" in payload && payload.data && typeof payload.data === "object" && "formId" in payload.data) {
+          formId = String(payload.data.formId);
+        }
+      }
+
+      if (!submitDetected || hasTrackedSubmitRef.current) {
+        return;
+      }
+
+      hasTrackedSubmitRef.current = true;
+      trackEvent("contact_submit", { form_id: formId ?? "unknown", channel: "tally" });
+    };
+
+    window.addEventListener("message", onMessage);
 
     const existingScript = document.querySelector<HTMLScriptElement>(
       `script[src="${TALLY_WIDGET_SCRIPT_SRC}"]`
@@ -44,6 +83,7 @@ export function TallyRequestEmbed() {
       return () => {
         existingScript.removeEventListener("load", loadTallyEmbeds);
         existingScript.removeEventListener("error", loadTallyEmbeds);
+        window.removeEventListener("message", onMessage);
       };
     }
 
@@ -57,6 +97,7 @@ export function TallyRequestEmbed() {
     return () => {
       script.onload = null;
       script.onerror = null;
+      window.removeEventListener("message", onMessage);
     };
   }, []);
 

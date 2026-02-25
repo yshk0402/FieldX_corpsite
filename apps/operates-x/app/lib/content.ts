@@ -1,9 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
-export type ArticleCategory = "blog" | "case" | "news";
+export type ArticleCategory = "article" | "case" | "news";
 
 export type ArticleStatus = "draft" | "published";
+export type SearchIntent = "awareness" | "consideration" | "decision" | "implementation";
+export type CtaType = "consult" | "document";
 
 export type ArticleFrontmatter = {
   title: string;
@@ -16,6 +18,10 @@ export type ArticleFrontmatter = {
   ogImage?: string;
   thumbnail?: string;
   campaign?: string;
+  targetIntent?: SearchIntent;
+  primaryKeyword?: string;
+  secondaryKeywords?: string[];
+  ctaType?: CtaType;
 };
 
 export type ArticleHeading = {
@@ -177,6 +183,29 @@ function ensureArticleFrontmatter(
   const ogImage = typeof frontmatterData.ogImage === "string" ? frontmatterData.ogImage : undefined;
   const thumbnail = typeof frontmatterData.thumbnail === "string" ? frontmatterData.thumbnail : undefined;
   const campaign = category === "case" && typeof frontmatterData.campaign === "string" ? frontmatterData.campaign : undefined;
+  const primaryKeyword = typeof frontmatterData.primaryKeyword === "string" ? frontmatterData.primaryKeyword : undefined;
+  const secondaryKeywords = Array.isArray(frontmatterData.secondaryKeywords)
+    ? frontmatterData.secondaryKeywords
+    : undefined;
+  const targetIntentRaw = typeof frontmatterData.targetIntent === "string" ? frontmatterData.targetIntent : undefined;
+  const targetIntent: SearchIntent | undefined =
+    targetIntentRaw === "awareness" ||
+    targetIntentRaw === "consideration" ||
+    targetIntentRaw === "decision" ||
+    targetIntentRaw === "implementation"
+      ? targetIntentRaw
+      : undefined;
+  const ctaTypeRaw = typeof frontmatterData.ctaType === "string" ? frontmatterData.ctaType : undefined;
+  const ctaType: CtaType | undefined = ctaTypeRaw === "document" || ctaTypeRaw === "consult" ? ctaTypeRaw : undefined;
+
+  if (status === "published") {
+    const hasRequiredPublishedFields =
+      Boolean(publishedAt) && Boolean(ogImage) && Boolean(thumbnail) && Boolean(primaryKeyword) && Boolean(targetIntent);
+
+    if (!hasRequiredPublishedFields) {
+      return null;
+    }
+  }
 
   return {
     title,
@@ -188,7 +217,11 @@ function ensureArticleFrontmatter(
     newsLabel,
     ogImage,
     thumbnail,
-    campaign
+    campaign,
+    targetIntent,
+    primaryKeyword,
+    secondaryKeywords,
+    ctaType
   };
 }
 

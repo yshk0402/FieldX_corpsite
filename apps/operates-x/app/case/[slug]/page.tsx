@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ArticleTemplate } from "../../components/ArticleTemplate";
 import { getArticleBySlug, getArticleSlugs } from "../../lib/content";
+import { getSiteUrl } from "../../lib/site";
 
 type CaseArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -15,6 +16,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: CaseArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
   const article = getArticleBySlug("case", slug);
+  const siteUrl = getSiteUrl();
 
   if (!article) {
     return {
@@ -25,6 +27,9 @@ export async function generateMetadata({ params }: CaseArticlePageProps): Promis
   return {
     title: `${article.frontmatter.title} | AImate`,
     description: article.frontmatter.description,
+    alternates: {
+      canonical: `${siteUrl}/case/${article.frontmatter.slug}`
+    },
     openGraph: {
       title: article.frontmatter.title,
       description: article.frontmatter.description,

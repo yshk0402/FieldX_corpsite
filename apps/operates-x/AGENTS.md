@@ -24,14 +24,14 @@ The goal is to ship blog content and landing pages rapidly while keeping all sou
 - If a change is breaking, document impact and migration steps in PR description.
 
 ## Content Placement Rules
-- Blog content: `content/blog/*.mdx`
+- Article content: `content/article/*.mdx`
 - Case study content: `content/case/*.mdx`
 - News content: `content/news/*.mdx`
 - Landing pages: `content/lp/*.mdx`
 - Public images: `public/images/*`
 
 ## Frontmatter Requirements
-### Blog
+### Article
 Required fields:
 - `title`
 - `description`
@@ -80,6 +80,6 @@ Optional fields:
 
 ## Routing Rules
 - Route format: `/...` (no locale prefix)
-- Blog detail: `/blog/[slug]`
+- Article detail: `/article/[slug]`
 - Case detail: `/case/[slug]`
 - News detail: `/news/[slug]`

@@ -1338,6 +1338,44 @@ a {
   padding-block: clamp(2rem, 3.8vw, 2.8rem);
 }
 
+.fx-article-filters {
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: 1.4rem;
+}
+
+.fx-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.fx-filter-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #555;
+  margin-right: 0.1rem;
+}
+
+.fx-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  border: 1px solid #d3d3d3;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  background: #fff;
+}
+
+.fx-filter-chip.is-active {
+  background: var(--fx-accent);
+  border-color: var(--fx-accent);
+  color: #fff;
+}
+
 .fx-listing-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, clamp(230px, 24vw, 320px)));
@@ -1410,6 +1448,15 @@ a {
   color: #676767;
   font-size: clamp(0.88rem, 0.14vw + 0.84rem, 0.96rem);
   line-height: 1.3;
+}
+
+.fx-listing-intent {
+  margin-top: 0.6rem;
+  margin-bottom: 0;
+  color: var(--fx-accent-strong);
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .fx-listing-card .fx-card-meta {
@@ -1627,6 +1674,32 @@ a {
   color: var(--fx-accent-strong);
 }
 
+.fx-article-inline-cta {
+  margin-top: clamp(1.8rem, 3vw, 2.3rem);
+  padding: clamp(1rem, 2vw, 1.35rem);
+  border-radius: 12px;
+  border: 1px solid #e0c8c8;
+  background: #fff7f7;
+}
+
+.fx-article-inline-cta-title {
+  margin: 0;
+  font-size: clamp(1.1rem, 0.5vw + 0.95rem, 1.28rem);
+  font-family: var(--font-heading), sans-serif;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+.fx-article-inline-cta-description {
+  margin: 0.55rem 0 0;
+  color: #333;
+}
+
+.fx-article-inline-cta-link {
+  margin-top: 0.9rem;
+  width: fit-content;
+}
+
 .fx-article-banner-section {
   margin-top: clamp(1.8rem, 3.2vw, 2.6rem);
 }
@@ -1646,6 +1719,59 @@ a {
   display: block;
   width: 100%;
   height: auto;
+}
+
+.fx-related-case-section {
+  margin-top: clamp(2rem, 3.5vw, 2.8rem);
+}
+
+.fx-related-case-title {
+  margin: 0 0 0.9rem;
+  font-family: var(--font-heading), sans-serif;
+  font-size: clamp(1.2rem, 0.55vw + 1.08rem, 1.45rem);
+  line-height: 1.4;
+}
+
+.fx-related-case-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr));
+  gap: 0.8rem;
+}
+
+.fx-related-case-card {
+  border: 1px solid #dfdfdf;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.fx-related-case-link {
+  display: block;
+  text-decoration: none;
+  padding: 0.9rem;
+}
+
+.fx-related-case-date {
+  margin: 0;
+  color: #707070;
+  font-size: 0.82rem;
+}
+
+.fx-related-case-card h4 {
+  margin: 0.45rem 0 0;
+  line-height: 1.45;
+  font-size: 1rem;
+}
+
+.fx-related-case-card p {
+  margin: 0.55rem 0 0;
+  color: #444;
+  font-size: 0.92rem;
+  line-height: 1.65;
+}
+
+.fx-empty-state {
+  margin: 1rem 0 0;
+  color: #666;
 }
 
 .fx-legal-content h2 {

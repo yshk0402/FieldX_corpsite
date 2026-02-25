@@ -1,76 +1,76 @@
 import type { MetadataRoute } from "next";
 
 import { getPublishedArticles } from "./lib/content";
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com";
+import { getSiteUrl } from "./lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const siteUrl = getSiteUrl();
   const now = new Date();
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${SITE_URL}/`,
+      url: `${siteUrl}/`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 1
     },
     {
-      url: `${SITE_URL}/blog`,
+      url: `${siteUrl}/article`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8
     },
     {
-      url: `${SITE_URL}/case`,
+      url: `${siteUrl}/case`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8
     },
     {
-      url: `${SITE_URL}/news`,
+      url: `${siteUrl}/news`,
       lastModified: now,
       changeFrequency: "weekly",
       priority: 0.8
     },
     {
-      url: `${SITE_URL}/contact`,
+      url: `${siteUrl}/contact`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7
     },
     {
-      url: `${SITE_URL}/privacy`,
+      url: `${siteUrl}/privacy`,
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.4
     },
     {
-      url: `${SITE_URL}/terms`,
+      url: `${siteUrl}/terms`,
       lastModified: now,
       changeFrequency: "yearly",
       priority: 0.4
     }
   ];
 
-  const blogRoutes: MetadataRoute.Sitemap = getPublishedArticles("blog").map((article) => ({
-    url: `${SITE_URL}/blog/${article.frontmatter.slug}`,
+  const articleRoutes: MetadataRoute.Sitemap = getPublishedArticles("article").map((article) => ({
+    url: `${siteUrl}/article/${article.frontmatter.slug}`,
     lastModified: article.frontmatter.publishedAt ? new Date(article.frontmatter.publishedAt) : now,
     changeFrequency: "monthly",
     priority: 0.7
   }));
 
   const caseRoutes: MetadataRoute.Sitemap = getPublishedArticles("case").map((article) => ({
-    url: `${SITE_URL}/case/${article.frontmatter.slug}`,
+    url: `${siteUrl}/case/${article.frontmatter.slug}`,
     lastModified: article.frontmatter.publishedAt ? new Date(article.frontmatter.publishedAt) : now,
     changeFrequency: "monthly",
     priority: 0.7
   }));
 
   const newsRoutes: MetadataRoute.Sitemap = getPublishedArticles("news").map((article) => ({
-    url: `${SITE_URL}/news/${article.frontmatter.slug}`,
+    url: `${siteUrl}/news/${article.frontmatter.slug}`,
     lastModified: article.frontmatter.publishedAt ? new Date(article.frontmatter.publishedAt) : now,
     changeFrequency: "monthly",
     priority: 0.7
   }));
 
-  return [...staticRoutes, ...blogRoutes, ...caseRoutes, ...newsRoutes];
+  return [...staticRoutes, ...articleRoutes, ...caseRoutes, ...newsRoutes];
 }

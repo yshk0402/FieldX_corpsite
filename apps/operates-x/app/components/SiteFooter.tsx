@@ -8,7 +8,7 @@ const footerLinks = [
   { href: "/#section6", label: "導入の流れ" },
   { href: "/#section5", label: "導入事例" },
   { href: "/news", label: "ニュース" },
-  { href: "/blog", label: "記事" },
+  { href: "/article", label: "記事" },
   { href: "/contact", label: "お問い合わせ" }
 ] as const;
 

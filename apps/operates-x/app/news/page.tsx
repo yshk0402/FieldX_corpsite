@@ -3,10 +3,14 @@ import Link from "next/link";
 
 import { SiteHeader } from "../components/SiteHeader";
 import { formatDisplayDate, getNewsArticles } from "../lib/articles";
+import { getSiteUrl } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "ニュース | AImate",
-  description: "AImateのニュース一覧ページです。"
+  description: "AImateのニュース一覧ページです。",
+  alternates: {
+    canonical: `${getSiteUrl()}/news`
+  }
 };
 
 export default function NewsPage() {

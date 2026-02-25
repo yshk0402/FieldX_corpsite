@@ -2,10 +2,14 @@ import type { Metadata } from "next";
 
 import { TallyRequestEmbed } from "../components/ContactEmbeds";
 import { SiteHeader } from "../components/SiteHeader";
+import { getSiteUrl } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "お問い合わせ | AImate",
-  description: "AImateへのお問い合わせページです。"
+  description: "AI業務改善のご相談・資料請求はこちらからお問い合わせください。",
+  alternates: {
+    canonical: `${getSiteUrl()}/contact`
+  }
 };
 
 export default function ContactPage() {

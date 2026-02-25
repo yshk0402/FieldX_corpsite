@@ -4,10 +4,14 @@ import Link from "next/link";
 
 import { SiteHeader } from "../components/SiteHeader";
 import { formatDisplayDate, getCaseArticles } from "../lib/articles";
+import { getSiteUrl } from "../lib/site";
 
 export const metadata: Metadata = {
   title: "導入事例 | AImate",
-  description: "AImateの導入事例をまとめたページです。"
+  description: "AImateの導入事例をまとめたページです。",
+  alternates: {
+    canonical: `${getSiteUrl()}/case`
+  }
 };
 
 export default function CasePage() {
