@@ -21,6 +21,11 @@ export type ServiceCard = {
   };
 };
 
+export type WhatWeDoFeatureRow = {
+  title: string;
+  body: string;
+};
+
 export type SectionTone = "light" | "dark";
 
 export type TemplateVariant = "home" | "blog-index" | "blog-post" | "lp";

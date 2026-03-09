@@ -4,7 +4,11 @@ import Link from "next/link";
 import { BodyText, Surface } from "@/components/atoms";
 import { SectionHeader } from "@/components/molecules";
 
-import type { HomeSection, ServiceCard as ServiceCardType } from "@/types/site";
+import type {
+  HomeSection,
+  ServiceCard as ServiceCardType,
+  WhatWeDoFeatureRow
+} from "@/types/site";
 
 type WhatWeDoOrganismProps = {
   sectionId: HomeSection;
@@ -17,6 +21,8 @@ type WhatWeDoOrganismProps = {
   accentBackground?: boolean;
   showMedia?: boolean;
   linkBasePath?: string;
+  layout?: "featured" | "catalog";
+  featuredRows?: WhatWeDoFeatureRow[];
 };
 
 export function WhatWeDoOrganism({
@@ -29,7 +35,9 @@ export function WhatWeDoOrganism({
   kicker = "Business",
   accentBackground = true,
   showMedia = false,
-  linkBasePath = "what-we-do"
+  linkBasePath = "what-we-do",
+  layout = "catalog",
+  featuredRows = []
 }: WhatWeDoOrganismProps) {
   const groupedServices = services.reduce<Array<{ category: string; items: ServiceCardType[] }>>(
     (acc, service) => {
@@ -70,6 +78,7 @@ export function WhatWeDoOrganism({
       className={[
         "fx-section-organism",
         "fx-services-organism",
+        layout === "featured" ? "fx-services-organism-featured" : null,
         showMedia ? "fx-services-organism-page" : null,
         accentBackground ? "fx-services-organism-accent" : "fx-services-organism-default"
       ]
@@ -77,59 +86,89 @@ export function WhatWeDoOrganism({
         .join(" ")}
     >
       <div className="fx-shell">
-        <SectionHeader title={heading} titleId={titleId} level={headingLevel} kicker={kicker ?? undefined} />
-        {intro ? <BodyText className="fx-whatwedo-intro">{intro}</BodyText> : null}
-        <div className="fx-whatwedo-stack" aria-label={heading} role="list">
-          {groupedServices.map((group) => (
-            <article
-              key={group.category}
-              id={getCategoryAnchorId(group.category)}
-              className="fx-whatwedo-group"
-              role="listitem"
-            >
-              <h3 className="fx-whatwedo-category">{group.category}</h3>
-              <ul className="fx-whatwedo-list" aria-label={group.category}>
-                {group.items.map((service) => (
-                  <li key={service.slug ?? service.name}>
-                    {service.slug ? (
-                      <Link href={`/${linkBasePath}/${service.slug}`} className="fx-whatwedo-item-link">
-                        <article className={showMedia ? "fx-whatwedo-item fx-whatwedo-item-media" : "fx-whatwedo-item"}>
-                          <div className="fx-whatwedo-item-content">
-                            <h4 className="fx-whatwedo-item-title">{service.name}</h4>
-                            <p className="fx-whatwedo-item-body">{service.description}</p>
-                          </div>
-                          {showMedia && service.image ? (
-                            <figure className="fx-whatwedo-item-image">
-                              <Image src={service.image.src} alt={service.image.alt} width={280} height={168} />
-                            </figure>
-                          ) : null}
-                          <span className="fx-whatwedo-arrow" aria-hidden="true">
-                            →
-                          </span>
-                        </article>
-                      </Link>
-                    ) : (
-                      <article className={showMedia ? "fx-whatwedo-item fx-whatwedo-item-media" : "fx-whatwedo-item"}>
-                        <div className="fx-whatwedo-item-content">
-                          <h4 className="fx-whatwedo-item-title">{service.name}</h4>
-                          <p className="fx-whatwedo-item-body">{service.description}</p>
-                        </div>
-                        {showMedia && service.image ? (
-                          <figure className="fx-whatwedo-item-image">
-                            <Image src={service.image.src} alt={service.image.alt} width={280} height={168} />
-                          </figure>
-                        ) : null}
-                        <span className="fx-whatwedo-arrow" aria-hidden="true">
-                          →
+        {layout === "featured" ? (
+          <div className="fx-whatwedo-featured">
+            <div className="fx-whatwedo-featured-inner">
+              <SectionHeader
+                title={heading}
+                titleId={titleId}
+                level={headingLevel}
+                kicker={undefined}
+                className="fx-whatwedo-featured-header"
+              />
+              <div className="fx-whatwedo-featured-list" aria-label={heading} role="list">
+                {featuredRows.map((row) => (
+                  <article key={row.title} className="fx-whatwedo-featured-row" role="listitem">
+                    <h3 className="fx-whatwedo-featured-title">{row.title}</h3>
+                    <p className="fx-whatwedo-featured-body">
+                      {row.body.split("\n").map((line, index) => (
+                        <span key={`${row.title}-${index}`} className="fx-whatwedo-featured-line">
+                          {line}
                         </span>
-                      </article>
-                    )}
-                  </li>
+                      ))}
+                    </p>
+                  </article>
                 ))}
-              </ul>
-            </article>
-          ))}
-        </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            <SectionHeader title={heading} titleId={titleId} level={headingLevel} kicker={kicker ?? undefined} />
+            {intro ? <BodyText className="fx-whatwedo-intro">{intro}</BodyText> : null}
+            <div className="fx-whatwedo-stack" aria-label={heading} role="list">
+              {groupedServices.map((group) => (
+                <article
+                  key={group.category}
+                  id={getCategoryAnchorId(group.category)}
+                  className="fx-whatwedo-group"
+                  role="listitem"
+                >
+                  <h3 className="fx-whatwedo-category">{group.category}</h3>
+                  <ul className="fx-whatwedo-list" aria-label={group.category}>
+                    {group.items.map((service) => (
+                      <li key={service.slug ?? service.name}>
+                        {service.slug ? (
+                          <Link href={`/${linkBasePath}/${service.slug}`} className="fx-whatwedo-item-link">
+                            <article className={showMedia ? "fx-whatwedo-item fx-whatwedo-item-media" : "fx-whatwedo-item"}>
+                              <div className="fx-whatwedo-item-content">
+                                <h4 className="fx-whatwedo-item-title">{service.name}</h4>
+                                <p className="fx-whatwedo-item-body">{service.description}</p>
+                              </div>
+                              {showMedia && service.image ? (
+                                <figure className="fx-whatwedo-item-image">
+                                  <Image src={service.image.src} alt={service.image.alt} width={280} height={168} />
+                                </figure>
+                              ) : null}
+                              <span className="fx-whatwedo-arrow" aria-hidden="true">
+                                →
+                              </span>
+                            </article>
+                          </Link>
+                        ) : (
+                          <article className={showMedia ? "fx-whatwedo-item fx-whatwedo-item-media" : "fx-whatwedo-item"}>
+                            <div className="fx-whatwedo-item-content">
+                              <h4 className="fx-whatwedo-item-title">{service.name}</h4>
+                              <p className="fx-whatwedo-item-body">{service.description}</p>
+                            </div>
+                            {showMedia && service.image ? (
+                              <figure className="fx-whatwedo-item-image">
+                                <Image src={service.image.src} alt={service.image.alt} width={280} height={168} />
+                              </figure>
+                            ) : null}
+                            <span className="fx-whatwedo-arrow" aria-hidden="true">
+                              →
+                            </span>
+                          </article>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </Surface>
   );

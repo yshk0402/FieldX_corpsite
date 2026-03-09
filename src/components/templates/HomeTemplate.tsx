@@ -34,7 +34,14 @@ export function HomeTemplate({ content, posts }: HomeTemplateProps) {
         aboutHref="/about"
       />
 
-      <WhatWeDoOrganism sectionId={SECTION_IDS["what-we-do"]} heading={content.whatWeDo.heading} services={content.whatWeDo.services} />
+      <WhatWeDoOrganism
+        sectionId={SECTION_IDS["what-we-do"]}
+        heading={content.whatWeDo.heading}
+        services={content.whatWeDo.services}
+        featuredRows={content.whatWeDo.featuredRows}
+        accentBackground={false}
+        layout="featured"
+      />
 
       <NewsOrganism sectionId={SECTION_IDS.news} heading={content.news.heading} emptyLabel={content.news.empty} posts={posts} />
 

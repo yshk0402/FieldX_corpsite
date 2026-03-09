@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 import { Surface } from "@/components/atoms";
 import { SectionHeader } from "@/components/molecules";
 
@@ -23,13 +25,25 @@ export function PoemOrganism({ sectionId, heading, body, aboutCtaLabel, aboutHre
       className="fx-poem-organism"
     >
       <div className="fx-shell fx-poem-shell">
-        {hasHeading ? <SectionHeader title={heading} titleId="home-poem-title" /> : null}
-        <p id="home-poem-text" className="fx-body-text fx-poem-body">
-          {body}
-        </p>
-        <a className="fx-about-cta" href={aboutHref}>
-          {aboutCtaLabel}
-        </a>
+        <div className="fx-poem-copy">
+          {hasHeading ? <SectionHeader title={heading} titleId="home-poem-title" /> : null}
+          <p id="home-poem-text" className="fx-body-text fx-poem-body">
+            {body}
+          </p>
+          <a className="fx-about-cta" href={aboutHref}>
+            {aboutCtaLabel}
+          </a>
+        </div>
+        <figure className="fx-poem-figure" aria-hidden="true">
+          <Image
+            src="/images/home/frame-2.png"
+            alt=""
+            width={32768}
+            height={14436}
+            className="fx-poem-image"
+            sizes="(max-width: 980px) 100vw, 42vw"
+          />
+        </figure>
       </div>
     </Surface>
   );
