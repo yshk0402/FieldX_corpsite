@@ -27,16 +27,11 @@ function getFooterContent(): FooterContent {
         children: [
           { href: "/about#mvv", label: "MVV" },
           { href: "/about#team", label: "Team" },
-          { href: "/about#history", label: "沿革" },
           { href: "/about#company-profile", label: "会社概要" }
         ]
       },
       {
-        heading: { href: "/what-we-do", label: "what we do" },
-        children: [
-          { href: "/what-we-do#ai-dx", label: "AI DX事業" },
-          { href: "/what-we-do#education", label: "教育事業" }
-        ]
+        heading: { href: "/what-we-do", label: "what we do" }
       }
     ],
     secondary: [

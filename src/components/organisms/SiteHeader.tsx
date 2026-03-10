@@ -13,16 +13,11 @@ type SiteHeaderProps = {
   aboutSectionNav: {
     mvv: string;
     team: string;
-    history: string;
     companyProfile: string;
-  };
-  whatWeDoSectionNav?: {
-    aiDx: string;
-    education: string;
   };
 };
 
-export function SiteHeader({ company, nav, aboutSectionNav, whatWeDoSectionNav }: SiteHeaderProps) {
+export function SiteHeader({ company, nav, aboutSectionNav }: SiteHeaderProps) {
   return (
     <header className="fx-site-header">
       <div className="fx-shell">
@@ -30,7 +25,7 @@ export function SiteHeader({ company, nav, aboutSectionNav, whatWeDoSectionNav }
           <BrandWordmark company={company} />
           <div className="fx-site-header-desktop">
             <nav aria-label="Global" className="fx-site-nav">
-              <GlobalNavList nav={nav} aboutSectionNav={aboutSectionNav} whatWeDoSectionNav={whatWeDoSectionNav} />
+              <GlobalNavList nav={nav} aboutSectionNav={aboutSectionNav} />
             </nav>
           </div>
           <MobileHeaderMenu nav={nav} />

@@ -1,6 +1,7 @@
 export { AboutOrganism } from "./AboutOrganism";
 export { CompanyProfileOrganism } from "./CompanyProfileOrganism";
 export { ContactOrganism } from "./ContactOrganism";
+export { ContactPageOrganism } from "./ContactPageOrganism";
 export { HeroOrganism } from "./HeroOrganism";
 export { HistoryOrganism } from "./HistoryOrganism";
 export { MobileHeaderMenu } from "./MobileHeaderMenu";

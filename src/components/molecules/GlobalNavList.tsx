@@ -10,12 +10,7 @@ type GlobalNavListProps = {
   aboutSectionNav?: {
     mvv: string;
     team: string;
-    history: string;
     companyProfile: string;
-  };
-  whatWeDoSectionNav?: {
-    aiDx: string;
-    education: string;
   };
   enableAboutDropdown?: boolean;
   className?: string;
@@ -25,7 +20,6 @@ type GlobalNavListProps = {
 export function GlobalNavList({
   nav,
   aboutSectionNav,
-  whatWeDoSectionNav,
   enableAboutDropdown = true,
   className,
   onNavigate
@@ -48,11 +42,6 @@ export function GlobalNavList({
                 </TextAnchor>
               </li>
               <li>
-                <TextAnchor href="/about#history" className="fx-about-subnav-link">
-                  {aboutSectionNav.history}
-                </TextAnchor>
-              </li>
-              <li>
                 <TextAnchor href="/about#company-profile" className="fx-about-subnav-link">
                   {aboutSectionNav.companyProfile}
                 </TextAnchor>
@@ -61,24 +50,8 @@ export function GlobalNavList({
           </div>
         ) : null}
       </li>
-      <li className={whatWeDoSectionNav ? "fx-global-nav-item-dropdown" : undefined}>
+      <li>
         <NavItemLink href="/what-we-do" label={nav.whatWeDo} onClick={onNavigate} />
-        {whatWeDoSectionNav ? (
-          <div className="fx-about-subnav" role="menu" aria-label={`${nav.whatWeDo} sections`}>
-            <ul className="fx-about-subnav-list">
-              <li>
-                <TextAnchor href="/what-we-do#ai-dx" className="fx-about-subnav-link">
-                  {whatWeDoSectionNav.aiDx}
-                </TextAnchor>
-              </li>
-              <li>
-                <TextAnchor href="/what-we-do#education" className="fx-about-subnav-link">
-                  {whatWeDoSectionNav.education}
-                </TextAnchor>
-              </li>
-            </ul>
-          </div>
-        ) : null}
       </li>
       <li>
         <NavItemLink href="/news" label={nav.news} onClick={onNavigate} />

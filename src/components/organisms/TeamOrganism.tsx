@@ -38,7 +38,7 @@ export function TeamOrganism({
                 height={240}
                 loading="lazy"
               />
-              <div>
+              <div className="fx-team-card-body">
                 <h3 className="fx-team-name">{member.name}</h3>
                 <p className="fx-team-role">{member.role}</p>
                 <BodyText className="fx-team-bio">{member.bio}</BodyText>

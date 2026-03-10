@@ -1,4 +1,4 @@
-import { AboutOrganism, CompanyProfileOrganism, HistoryOrganism, MvvOrganism, TeamOrganism } from "@/components/organisms";
+import { AboutOrganism, CompanyProfileOrganism, MvvOrganism, TeamOrganism } from "@/components/organisms";
 import type { SiteLocaleContent } from "@/components/site/content";
 
 type AboutTemplateProps = {
@@ -27,12 +27,6 @@ export function AboutTemplate({ content }: AboutTemplateProps) {
         body={content.team.body}
         members={content.team.members}
         titleId="about-page-team-title"
-      />
-      <HistoryOrganism
-        sectionId="history"
-        heading={content.history.heading}
-        items={content.history.items}
-        titleId="about-page-history-title"
       />
       <CompanyProfileOrganism
         sectionId="company-profile"

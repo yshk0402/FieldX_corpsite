@@ -117,7 +117,10 @@ a {
   text-decoration: none;
   border-bottom: 1px solid rgba(255, 245, 242, 0.92);
   padding-bottom: 0.22rem;
-  transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .fx-footer-group {
@@ -154,7 +157,9 @@ a {
   letter-spacing: 0.04em;
   color: rgba(255, 245, 242, 0.92);
   text-decoration: none;
-  transition: color 0.2s ease, opacity 0.2s ease;
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
 }
 
 .fx-footer-link:hover,
@@ -314,6 +319,21 @@ a {
   .fx-page-section,
   .fx-section-organism {
     padding-block: clamp(4.6rem, 10vw, 6.2rem);
+  }
+
+  .fx-footer-groups {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--fx-space-4);
+  }
+
+  .fx-footer-group,
+  .fx-footer-group-secondary {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .fx-footer-secondary-links {
+    gap: 0.8rem;
   }
 
   .fx-main-area {

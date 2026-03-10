@@ -8,7 +8,7 @@ type CompanyProfileOrganismProps = {
   heading: string;
   items: {
     label: string;
-    value: string;
+    value: string | string[];
   }[];
   titleId?: string;
 };
@@ -27,7 +27,17 @@ export function CompanyProfileOrganism({
           {items.map((item) => (
             <div key={item.label} className="fx-company-profile-row">
               <dt className="fx-company-profile-label">{item.label}</dt>
-              <dd className="fx-company-profile-value">{item.value}</dd>
+              <dd className="fx-company-profile-value">
+                {Array.isArray(item.value) ? (
+                  <ul className="fx-company-profile-bullets">
+                    {item.value.map((value) => (
+                      <li key={value}>{value}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  item.value
+                )}
+              </dd>
             </div>
           ))}
         </dl>

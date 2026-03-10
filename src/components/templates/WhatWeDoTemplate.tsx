@@ -18,6 +18,9 @@ export function WhatWeDoTemplate({ content }: WhatWeDoTemplateProps) {
       accentBackground={false}
       showMedia
       linkBasePath="what-we-do"
+      featuredRows={content.whatWeDo.featuredRows}
+      showServiceDescriptions={false}
+      showServiceCatalog={false}
     />
   );
 }

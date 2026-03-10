@@ -27,6 +27,11 @@ export type SiteLocaleContent = {
       label: string;
       body?: string;
       points?: string[];
+      entries?: {
+        title: string;
+        subtitle?: string;
+        body: string;
+      }[];
     }[];
   };
   whatWeDo: {
@@ -46,18 +51,11 @@ export type SiteLocaleContent = {
       imageAlt: string;
     }[];
   };
-  history: {
-    heading: string;
-    items: {
-      year: string;
-      detail: string;
-    }[];
-  };
   companyProfile: {
     heading: string;
     items: {
       label: string;
-      value: string;
+      value: string | string[];
     }[];
   };
   news: {
@@ -121,20 +119,45 @@ Field Xは、すべての事業領域・業界でAIが意思決定を支え、
       items: [
         {
           label: "Mission",
-          body: "挑戦を、連続させる。"
+          body: "様々なFieldのXを解き、社会を次代につなげる。"
         },
         {
           label: "Vision",
-          body: "経済圏を創り、主導する。"
+          body: "すべての事業領域・業界でAIが意思決定を支え、\nヒトがヒトにしかできない業務に集中できる世界の実現"
         },
         {
           label: "Value",
-          points: [
-            "市場から逃げない",
-            "試す前に諦めない",
-            "速く作り、速く修正する",
-            "熱量を伝播させる",
-            "勝てない挑戦は続けない"
+          entries: [
+            {
+              title: "Solve the X",
+              subtitle: "見えない課題を見つけ、構造から解く。",
+              body:
+                "私たちは表面的な問題ではなく、\n業務や産業の構造そのものにある「X」を見つけ出し、解決する。"
+            },
+            {
+              title: "Build Fast",
+              subtitle: "速く作り、速く学び、速く進む。",
+              body:
+                "AI時代において最大の競争力はスピードである。\nField X は、仮説・実装・改善を高速で回す。"
+            },
+            {
+              title: "AI First",
+              subtitle: "AIを前提に世界を設計する。",
+              body:
+                "AIはツールではなく、\n新しいインフラである。\n私たちはすべての業務をAI前提で再設計する。"
+            },
+            {
+              title: "Think from the Field",
+              subtitle: "現場から考える。",
+              body:
+                "机上の理論ではなく、\n現場の業務・顧客・産業構造から答えを導く。"
+            },
+            {
+              title: "Create the Next Standard",
+              subtitle: "次の当たり前をつくる。",
+              body:
+                "AIエージェントが企業の業務を支える世界。\nField X はその標準をつくる。"
+            }
           ]
         }
       ]
@@ -191,44 +214,38 @@ Field Xは、すべての事業領域・業界でAIが意思決定を支え、
       body: "異なる専門性を持つ少数精鋭で、最後まで実装する。",
       members: [
         {
-          name: "Yusuke",
-          role: "Co-Founder / Product",
-          bio: "事業設計とプロダクト開発を横断し、顧客価値の立ち上げをリードします。",
-          imageSrc: "/images/team/member-placeholder.svg",
-          imageAlt: "Yusuke profile placeholder"
+          name: "佐藤善彦",
+          role: "代表取締役",
+          bio: "2002年広島県呉市生まれ。呉工業高等専門学校卒業後University of the Peopleへ編入し中退。在学中に広告代理店系ベンチャーで長期インターンシップを開始しその後新卒入社。ChatGPTなどの生成AI技術の指数関数的な発展をビジネスの現場で目の当たりにし、2026年AIによる業務改革を基軸事業に展開する株式会社Field Xを創業。",
+          imageSrc: "/images/team/sato-yoshihiko.jpg",
+          imageAlt: "佐藤善彦の顔写真"
         },
         {
-          name: "Shun",
-          role: "Co-Founder / Engineering",
-          bio: "技術戦略から実装までを担い、現場運用に乗る品質でのリリースを推進します。",
-          imageSrc: "/images/team/member-placeholder.svg",
-          imageAlt: "Shun profile placeholder"
-        },
-        {
-          name: "Kaede",
-          role: "Operations",
-          bio: "プロジェクト進行と顧客コミュニケーションを支え、成果が届く運用基盤を整えます。",
-          imageSrc: "/images/team/member-placeholder.svg",
-          imageAlt: "Kaede profile placeholder"
+          name: "吉村佑介",
+          role: "共同創業者 専務取締役",
+          bio: "2002年広島県福山市生まれ。呉工業高等専門学校プロジェクトデザイン工学専攻卒業。新卒から、大手電力会社、大手不動産ディベロッパーで営業職として渡り歩く。2026年AIによる業務改革を基軸事業に展開する株式会社Field Xを共同創業。現在は事業最高責任者として不動産賃貸管理会社のコールセンターAIや書類管理をDXするAIサービスを展開している。",
+          imageSrc: "/images/team/yoshimura-yusuke.jpg",
+          imageAlt: "吉村佑介の顔写真"
         }
-      ]
-    },
-    history: {
-      heading: "沿革",
-      items: [
-        { year: "2025.04", detail: "Field Xを創業" },
-        { year: "2025.08", detail: "AI DX支援サービス「Operates X」を提供開始" },
-        { year: "2026.01", detail: "教育事業「高専ジョブ」をリリース" }
       ]
     },
     companyProfile: {
       heading: "会社概要",
       items: [
-        { label: "会社名", value: "株式会社Field X" },
-        { label: "設立", value: "2025年4月" },
-        { label: "所在地", value: "東京都（リモート中心）" },
-        { label: "事業内容", value: "AI DX事業 / 教育事業" },
-        { label: "代表", value: "共同代表" }
+        { label: "会社名", value: "Field X" },
+        { label: "代表者", value: "佐藤 善彦" },
+        { label: "所在地", value: "東京都渋谷区神泉町10-15" },
+        { label: "設立", value: "2026年" },
+        {
+          label: "主な事業領域",
+          value: [
+            "AIコールエージェントの開発・導入",
+            "書類業務のAI自動化",
+            "業務オペレーションのAIエージェント化",
+            "ナレッジベース / RAGシステムの構築",
+            "AI活用プロダクトの開発"
+          ]
+        }
       ]
     },
     news: {

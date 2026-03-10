@@ -24,12 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             aboutSectionNav={{
               mvv: siteContent.mvv.heading,
               team: siteContent.team.heading,
-              history: siteContent.history.heading,
               companyProfile: siteContent.companyProfile.heading
-            }}
-            whatWeDoSectionNav={{
-              aiDx: "AI DX事業",
-              education: "教育事業"
             }}
           />
         )}

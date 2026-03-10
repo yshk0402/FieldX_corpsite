@@ -1,21 +1,18 @@
 ---
-title: "AI駆動開発に向けたコーポレートサイト基盤"
-description: "Git管理でブログとLPを高速に展開するための初期設計。"
+title: "記事テンプレート"
+description: "今後の記事追加時に複製して使うためのテンプレートです。"
 slug: "_example"
-status: "published"
-publishedAt: "2026-02-10"
+status: "draft"
 tags:
-  - "corporate-site"
-  - "ai-workflow"
-ogImage: "/images/og-blog-example-ja.png"
+  - "template"
 ---
 
-## なぜこの構成か
+## 使い方
 
-CMSを使わず、Gitでコンテンツ運用したいチーム向けに、再現性と拡張性を優先した構成です。
+このファイルを複製し、`slug` をファイル名と揃えてから本文を編集してください。
 
-## 得られるメリット
+## チェック項目
 
-- ブログとLPを同じルールで管理できる
-- 下書きと公開を frontmatter で制御できる
-- デプロイが一貫し、AIエージェントの作業範囲を固定できる
+- `status` を `published` に変更する
+- `title` と `description` を実際の内容に更新する
+- 必要に応じて `publishedAt` `tags` `ogImage` を追加する

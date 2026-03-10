@@ -1,42 +1,25 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { trackEvent } from "../lib/analytics";
 
-declare global {
-  interface Window {
-    Tally?: {
-      loadEmbeds: () => void;
-    };
-  }
-}
-
-const TALLY_WIDGET_SCRIPT_SRC = "https://tally.so/widgets/embed.js";
-
-function loadTallyEmbeds() {
-  if (typeof window === "undefined") {
-    return;
-  }
-
-  if (window.Tally) {
-    window.Tally.loadEmbeds();
-    return;
-  }
-
-  document
-    .querySelectorAll<HTMLIFrameElement>('iframe[data-tally-src]:not([src])')
-    .forEach((iframe) => {
-      iframe.src = iframe.dataset.tallySrc ?? "";
-    });
-}
+const TALLY_REQUEST_EMBED_URL =
+  "https://tally.so/embed/gD0a21?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1";
+const TALLY_REQUEST_FORM_URL = "https://tally.so/r/gD0a21";
+const TALLY_FALLBACK_TIMEOUT_MS = 6000;
 
 export function TallyRequestEmbed() {
   const hasTrackedSubmitRef = useRef(false);
+  const fallbackTimerRef = useRef<number | null>(null);
+  const [showFallback, setShowFallback] = useState(false);
 
   useEffect(() => {
     trackEvent("contact_page_view", { source: "contact_page" });
-    loadTallyEmbeds();
+
+    fallbackTimerRef.current = window.setTimeout(() => {
+      setShowFallback(true);
+    }, TALLY_FALLBACK_TIMEOUT_MS);
 
     const onMessage = (event: MessageEvent) => {
       const payload = event.data;
@@ -72,39 +55,37 @@ export function TallyRequestEmbed() {
 
     window.addEventListener("message", onMessage);
 
-    const existingScript = document.querySelector<HTMLScriptElement>(
-      `script[src="${TALLY_WIDGET_SCRIPT_SRC}"]`
-    );
-
-    if (existingScript) {
-      existingScript.addEventListener("load", loadTallyEmbeds);
-      existingScript.addEventListener("error", loadTallyEmbeds);
-
-      return () => {
-        existingScript.removeEventListener("load", loadTallyEmbeds);
-        existingScript.removeEventListener("error", loadTallyEmbeds);
-        window.removeEventListener("message", onMessage);
-      };
-    }
-
-    const script = document.createElement("script");
-    script.src = TALLY_WIDGET_SCRIPT_SRC;
-    script.async = true;
-    script.onload = loadTallyEmbeds;
-    script.onerror = loadTallyEmbeds;
-    document.body.appendChild(script);
-
     return () => {
-      script.onload = null;
-      script.onerror = null;
+      if (fallbackTimerRef.current !== null) {
+        window.clearTimeout(fallbackTimerRef.current);
+        fallbackTimerRef.current = null;
+      }
       window.removeEventListener("message", onMessage);
     };
   }, []);
 
+  function handleLoad() {
+    if (fallbackTimerRef.current !== null) {
+      window.clearTimeout(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+
+    setShowFallback(false);
+  }
+
+  function handleError() {
+    if (fallbackTimerRef.current !== null) {
+      window.clearTimeout(fallbackTimerRef.current);
+      fallbackTimerRef.current = null;
+    }
+
+    setShowFallback(true);
+  }
+
   return (
     <div className="fx-embed-shell">
       <iframe
-        data-tally-src="https://tally.so/embed/gD0a21?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1"
+        src={TALLY_REQUEST_EMBED_URL}
         loading="lazy"
         width="100%"
         height="784"
@@ -113,7 +94,18 @@ export function TallyRequestEmbed() {
         marginWidth={0}
         title="まずは無料でお問い合わせ"
         className="fx-tally-embed"
+        onLoad={handleLoad}
+        onError={handleError}
       />
+      {showFallback ? (
+        <p className="fx-embed-fallback" role="status">
+          埋め込みフォームの表示が不安定な場合があります。
+          {" "}
+          <a href={TALLY_REQUEST_FORM_URL} target="_blank" rel="noreferrer">
+            フォームを別タブで開く
+          </a>
+        </p>
+      ) : null}
     </div>
   );
 }

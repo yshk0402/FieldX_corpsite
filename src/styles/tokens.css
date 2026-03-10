@@ -45,7 +45,17 @@
   --fx-lh-body: 1.72;
   --fx-font-body: "Noto Sans JP", "Hiragino Kaku Gothic ProN", sans-serif;
   --fx-font-display: "M PLUS Rounded 1c", "Noto Sans JP", sans-serif;
-  --fx-hero-min-h: calc(
-    100svh - var(--fx-header-height) - (var(--fx-header-offset) * 2)
-  );
+  --fx-hero-min-h: calc(100svh - var(--fx-header-height) - (var(--fx-header-offset) * 2));
+}
+
+@media (max-width: 640px) {
+  :root {
+    --fx-shell-padding-x: clamp(14px, 5vw, 20px);
+    --fx-fs-body: clamp(0.97rem, 0.7vw + 0.86rem, 1.02rem);
+    --fx-fs-section-title: clamp(1.7rem, 5.8vw, 2.35rem);
+    --fx-fs-hero-title: clamp(2rem, 8.5vw, 3rem);
+    --fx-space-6: 1.9rem;
+    --fx-space-7: 2.6rem;
+    --fx-space-8: 3.8rem;
+  }
 }

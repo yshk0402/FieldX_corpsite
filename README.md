@@ -68,6 +68,23 @@ pnpm build
 pnpm format:check
 ```
 
+## Contact Form Mail Delivery
+To enable `/contact` automatic mail delivery, configure SMTP in `.env.local`.
+
+```bash
+SMTP_HOST=smtp.example.com
+SMTP_PORT=587
+SMTP_SECURE=false
+SMTP_USER=mailer@example.com
+SMTP_PASS=your-password
+CONTACT_FROM_EMAIL=hello@fieldx.site
+CONTACT_FROM_NAME=Field X
+```
+
+The form sends:
+- notification mail to `hello@fieldx.site`
+- auto-reply mail to the visitor's email address
+
 ## Directory Layout
 ```text
 src/

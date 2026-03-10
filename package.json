@@ -14,9 +14,11 @@
   },
   "dependencies": {
     "@mdx-js/mdx": "^3.0.0",
+    "@types/nodemailer": "^7.0.11",
     "gray-matter": "^4.0.3",
     "next": "^15.0.0",
     "next-mdx-remote": "^6.0.0",
+    "nodemailer": "^8.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "three": "^0.181.1",

@@ -1141,6 +1141,21 @@ a {
   background: rgb(255 255 255 / 72%);
 }
 
+.fx-embed-fallback {
+  margin: 0;
+  padding: 0.9rem 1rem 1rem;
+  color: rgb(48 42 42 / 84%);
+  font-size: 0.92rem;
+  line-height: 1.7;
+}
+
+.fx-embed-fallback a {
+  color: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
 .fx-tally-embed {
   display: block;
   inline-size: 100%;
