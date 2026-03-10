@@ -2986,22 +2986,41 @@
   .fx-hero-organism {
     min-height: calc(100svh - (var(--fx-space-3) * 2));
     height: auto;
-    align-items: center;
+    align-items: stretch;
     margin-top: calc(-1 * (70px + var(--fx-space-3)));
-    padding-top: calc(70px + var(--fx-space-3));
-    padding-bottom: var(--fx-space-3);
+    padding-top: calc(70px + var(--fx-space-3) + 0.8rem);
+    padding-bottom: clamp(1.8rem, 6vw, 2.6rem);
+  }
+
+  .fx-hero-radial-bg {
+    inset: 0 -12% 0 10%;
   }
 
   .fx-hero-radial-bg::after {
     opacity: 0.98;
   }
 
+  .fx-hero-radial-canvas {
+    transform: translate(7%, -5%) scale(1.08);
+    transform-origin: center;
+  }
+
   .fx-hero-copy .fx-hero-title {
-    max-width: 15ch;
+    max-width: 11ch;
+    gap: 0.12em;
+  }
+
+  .fx-hero-title-line {
+    transform: translateX(-20px);
+  }
+
+  .fx-hero-organism.is-ready .fx-hero-title-line {
+    animation-name: fx-hero-line-reveal-mobile;
   }
 
   .fx-hero-grid--single {
-    min-height: auto;
+    min-height: clamp(520px, 74svh, 680px);
+    align-items: end;
   }
 
   .fx-hero-copy {
@@ -3009,21 +3028,26 @@
     left: auto;
     bottom: auto;
     width: 100%;
-    max-width: min(100%, 30rem);
-    padding: clamp(1rem, 3vw, 1.35rem);
-    border-radius: clamp(18px, 5vw, 28px);
-    background: linear-gradient(180deg, rgba(242, 237, 235, 0.92), rgba(242, 237, 235, 0.78));
-    box-shadow: 0 16px 36px rgba(24, 19, 19, 0.08);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    max-width: min(100%, 21rem);
+    margin-bottom: clamp(3.4rem, 10vw, 5rem);
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
   }
 
   .fx-hero-body {
-    max-width: 34ch;
+    max-width: 28ch;
+  }
+
+  .fx-hero-title-line-text {
+    padding: 0.04em 0.12em 0.08em;
+    box-shadow: 0 10px 22px rgba(185, 0, 0, 0.14);
   }
 
   .fx-scroll-hint {
-    margin-top: var(--fx-space-3);
+    margin-top: 1.1rem;
     font-size: 1.15rem;
   }
 
@@ -3243,8 +3267,25 @@
     padding-bottom: var(--fx-space-4);
   }
 
+  .fx-hero-radial-bg {
+    inset: 2% -16% 2% 14%;
+  }
+
+  .fx-hero-radial-canvas {
+    transform: translate(10%, -6%) scale(1.1);
+  }
+
   .fx-hero-copy {
-    padding: 0.95rem 0.9rem 1rem;
+    max-width: min(100%, 18.5rem);
+    margin-bottom: clamp(3rem, 12vw, 4.2rem);
+  }
+
+  .fx-hero-copy .fx-hero-title {
+    max-width: 10ch;
+  }
+
+  .fx-hero-title-line {
+    transform: translateX(-16px);
   }
 
   .fx-whatwedo-featured {
@@ -3282,6 +3323,22 @@
 
   .fx-news-grid--latest .fx-meta-text {
     margin-top: -0.1rem;
+  }
+}
+
+@keyframes fx-hero-line-reveal-mobile {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+    clip-path: inset(0 100% 0 0);
+    filter: blur(2px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+    filter: blur(0);
   }
 }
 
