@@ -38,11 +38,10 @@ export function PoemOrganism({ sectionId, heading, body, aboutCtaLabel, aboutHre
           <Image
             src="/images/home/frame-2.png"
             alt=""
-            width={1800}
-            height={793}
+            width={4204}
+            height={1852}
             className="fx-poem-image"
             sizes="(max-width: 980px) 100vw, 42vw"
-            priority
           />
         </figure>
       </div>
