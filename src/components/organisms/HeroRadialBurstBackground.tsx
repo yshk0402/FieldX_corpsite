@@ -1,11 +1,75 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-const MAX_BLOBS = 7;
+const HERO_FIELD_MAX_BLOBS = 7;
 
-const VERTEX_SHADER = `
+type HeroFieldXConfig = {
+  scrollDamping: number;
+  originOffsetRatioX: number;
+  originOffsetRatioY: number;
+};
+
+type HeroFieldRenderProfile = {
+  intensityScale: number;
+  maxBlobs: number;
+  maxPixelRatio: number;
+  name: "desktop" | "tablet" | "mobile" | "rescue";
+  powerPreference: WebGLPowerPreference;
+  targetFps: number;
+};
+
+const HERO_FIELD_X_CONFIG: HeroFieldXConfig = {
+  scrollDamping: 0.11,
+  originOffsetRatioX: 1.35,
+  originOffsetRatioY: 0.5,
+};
+
+const HERO_METABALL_PALETTE = ["#BB0002", "#FF0005", "#FF5500", "#FFC105", "#FFC800"] as const;
+const HERO_FIELD_DEFAULT_ORIGIN = { x: 0.26, y: -0.08 } as const;
+const HERO_FIELD_RENDER_PROFILES: readonly HeroFieldRenderProfile[] = [
+  {
+    intensityScale: 1,
+    maxBlobs: HERO_FIELD_MAX_BLOBS,
+    maxPixelRatio: 1.35,
+    name: "desktop",
+    powerPreference: "high-performance",
+    targetFps: 60,
+  },
+  {
+    intensityScale: 0.94,
+    maxBlobs: 6,
+    maxPixelRatio: 1,
+    name: "tablet",
+    powerPreference: "default",
+    targetFps: 45,
+  },
+  {
+    intensityScale: 0.88,
+    maxBlobs: 5,
+    maxPixelRatio: 0.82,
+    name: "mobile",
+    powerPreference: "low-power",
+    targetFps: 30,
+  },
+  {
+    intensityScale: 0.8,
+    maxBlobs: 4,
+    maxPixelRatio: 0.65,
+    name: "rescue",
+    powerPreference: "low-power",
+    targetFps: 24,
+  },
+] as const;
+
+function randomBetween(min: number, max: number) {
+  return THREE.MathUtils.lerp(min, max, Math.random());
+}
+
+function createVertexShader() {
+  return `
+precision mediump float;
 varying vec2 vUv;
 
 void main() {
@@ -13,9 +77,14 @@ void main() {
   gl_Position = vec4(position, 1.0);
 }
 `;
+}
 
-const FRAGMENT_SHADER = `
-#define MAX_BLOBS ${MAX_BLOBS}
+function createFragmentShader(maxBlobs: number) {
+  return `
+precision mediump float;
+precision mediump int;
+
+#define MAX_BLOBS ${maxBlobs}
 
 uniform float uTime;
 uniform float uMotion;
@@ -45,14 +114,18 @@ vec2 blobPosition(int index, float t, float motion, float progress) {
   float seedA = hash11(fi * 3.17 + blob.w * 11.0);
   float seedB = hash11(fi * 5.93 + blob.w * 7.0);
   float seedC = hash11(fi * 8.41 + blob.w * 13.0);
+  float mobileMix = 1.0 - step(641.0, uResolution.x);
+  float clusterBaseX = mix(0.66, 0.03, mobileMix);
+  float clusterDriftX = mix(0.04, 0.022, mobileMix);
+  float clusterBaseY = mix(-0.02, 0.02, mobileMix);
   vec2 clusterCenter = vec2(
-    0.66 + sin(t * 0.08 + seedC * 6.28318530718) * 0.04,
-    -0.02
+    clusterBaseX + sin(t * 0.08 + seedC * 6.28318530718) * clusterDriftX,
+    clusterBaseY
   );
   vec2 clusterDrift = vec2(
     sin(t * 0.07 + seedA * 6.28318530718),
     cos(t * 0.06 + seedB * 6.28318530718)
-  ) * 0.02 * motion;
+  ) * mix(0.02, 0.014, mobileMix) * motion;
 
   if (index == 0) {
     vec2 coreDrift = vec2(
@@ -203,30 +276,14 @@ void main() {
   gl_FragColor = vec4(color, alpha);
 }
 `;
-
-type HeroFieldXConfig = {
-  scrollDamping: number;
-  originOffsetRatioX: number;
-  originOffsetRatioY: number;
-};
-
-const HERO_FIELD_X_CONFIG: HeroFieldXConfig = {
-  scrollDamping: 0.11,
-  originOffsetRatioX: 1.35,
-  originOffsetRatioY: 0.5,
-};
-
-const HERO_METABALL_PALETTE = ["#BB0002", "#FF0005", "#FF5500", "#FFC105", "#FFC800"] as const;
-
-function randomBetween(min: number, max: number) {
-  return THREE.MathUtils.lerp(min, max, Math.random());
 }
 
-function createRandomBlobLayout() {
+function createRandomBlobLayout(maxBlobs: number) {
   const blobs = [new THREE.Vector4(0, 0, randomBetween(0.25, 0.31), Math.random())];
-  const activeCount = Math.floor(randomBetween(5, MAX_BLOBS + 0.999));
+  const minimumActiveCount = Math.min(4, maxBlobs);
+  const activeCount = Math.max(minimumActiveCount, Math.floor(randomBetween(minimumActiveCount, maxBlobs + 0.999)));
 
-  for (let index = 1; index < MAX_BLOBS; index += 1) {
+  for (let index = 1; index < maxBlobs; index += 1) {
     const angle = randomBetween(-Math.PI * 0.92, Math.PI * 0.92);
     const distance = randomBetween(0.18, 0.38);
     const radius = index < activeCount ? randomBetween(0.11, 0.22) : randomBetween(0.08, 0.14);
@@ -246,11 +303,55 @@ function createRandomBlobLayout() {
   };
 }
 
+function getBaseThreshold(maxBlobs: number) {
+  if (maxBlobs <= 4) return 1.18;
+  if (maxBlobs <= 5) return 1.22;
+  return 1.26;
+}
+
+function getInitialRenderProfileIndex() {
+  const viewportWidth = window.innerWidth;
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const deviceMemory = (navigator as Navigator & { deviceMemory?: number }).deviceMemory ?? 4;
+  const cpuCores = navigator.hardwareConcurrency ?? 4;
+
+  if (reduceMotion) return 2;
+
+  if (viewportWidth <= 480 || (coarsePointer && (devicePixelRatio >= 3 || deviceMemory <= 4 || cpuCores <= 6))) {
+    return 2;
+  }
+
+  if (viewportWidth <= 840 || coarsePointer || devicePixelRatio > 2 || deviceMemory <= 6 || cpuCores <= 8) {
+    return 1;
+  }
+
+  return 0;
+}
+
+function getCappedPixelRatio(renderProfile: HeroFieldRenderProfile, width: number) {
+  const devicePixelRatio = window.devicePixelRatio || 1;
+  const viewportScale = width <= 480 ? 0.74 : width <= 640 ? 0.82 : width <= 980 ? 0.92 : 1;
+  return Math.max(0.55, Math.min(devicePixelRatio, renderProfile.maxPixelRatio) * viewportScale);
+}
+
 export function HeroFieldXBackground() {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
+  const [renderProfileIndex, setRenderProfileIndex] = useState<number | null>(() =>
+    typeof window === "undefined" ? null : getInitialRenderProfileIndex(),
+  );
 
   useEffect(() => {
+    if (renderProfileIndex !== null) return;
+    setRenderProfileIndex(getInitialRenderProfileIndex());
+  }, [renderProfileIndex]);
+
+  useEffect(() => {
+    if (renderProfileIndex === null) return;
+
+    const renderProfile = HERO_FIELD_RENDER_PROFILES[renderProfileIndex];
     const root = rootRef.current;
     if (!root) return;
     const sectionEl = root.parentElement as HTMLElement | null;
@@ -258,16 +359,44 @@ export function HeroFieldXBackground() {
 
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let renderer: InstanceType<typeof THREE.WebGLRenderer>;
+    let recoveryTimer: number | null = null;
+    let fallbackQueued = false;
+
+    root.dataset.webgl = "initializing";
+    root.dataset.webglProfile = renderProfile.name;
+
+    const requestLowerProfile = () => {
+      if (fallbackQueued) return true;
+
+      const nextProfileIndex = Math.min(renderProfileIndex + 1, HERO_FIELD_RENDER_PROFILES.length - 1);
+      if (nextProfileIndex === renderProfileIndex) return false;
+
+      fallbackQueued = true;
+      root.dataset.webgl = "retrying";
+      recoveryTimer = window.setTimeout(() => {
+        setRenderProfileIndex(nextProfileIndex);
+      }, 0);
+      return true;
+    };
 
     try {
       renderer = new THREE.WebGLRenderer({
         alpha: true,
         antialias: false,
-        powerPreference: "high-performance",
+        depth: false,
+        powerPreference: renderProfile.powerPreference,
+        stencil: false,
       });
     } catch {
-      root.dataset.webgl = "unsupported";
-      return;
+      if (!requestLowerProfile()) {
+        root.dataset.webgl = "unsupported";
+      }
+
+      return () => {
+        if (recoveryTimer !== null) {
+          window.clearTimeout(recoveryTimer);
+        }
+      };
     }
 
     const handleContextLoss = (event: Event) => {
@@ -278,7 +407,9 @@ export function HeroFieldXBackground() {
         rafRef.current = null;
       }
 
-      root.dataset.webgl = "lost";
+      if (!requestLowerProfile()) {
+        root.dataset.webgl = "lost";
+      }
     };
 
     renderer.setClearColor(0x000000, 0);
@@ -292,7 +423,7 @@ export function HeroFieldXBackground() {
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     const geometry = new THREE.PlaneGeometry(2, 2);
-    const blobLayout = createRandomBlobLayout();
+    const blobLayout = createRandomBlobLayout(renderProfile.maxBlobs);
 
     const uniforms = {
       uTime: { value: 0 },
@@ -310,23 +441,32 @@ export function HeroFieldXBackground() {
 
     const material = new THREE.ShaderMaterial({
       uniforms,
-      vertexShader: VERTEX_SHADER,
-      fragmentShader: FRAGMENT_SHADER,
+      fragmentShader: createFragmentShader(renderProfile.maxBlobs),
+      precision: "mediump",
       transparent: true,
       depthTest: false,
       depthWrite: false,
       blending: THREE.NormalBlending,
+      vertexShader: createVertexShader(),
     });
 
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    const originTarget = new THREE.Vector2(0.26, -0.08);
+    const originTarget = new THREE.Vector2(HERO_FIELD_DEFAULT_ORIGIN.x, HERO_FIELD_DEFAULT_ORIGIN.y);
     let scrollTarget = 0;
     let scrollCurrent = 0;
+    let isVisible = true;
+    let lastRenderTime = 0;
 
     const updateOriginFromHeading = () => {
       const sectionRect = sectionEl.getBoundingClientRect();
+      if (sectionRect.width <= 640) {
+        originTarget.set(0.04, 0.04);
+        uniforms.uOrigin.value.copy(originTarget);
+        return;
+      }
+
       const heading = sectionEl.querySelector<HTMLElement>("#home-hero-title");
       if (!heading || sectionRect.width < 1 || sectionRect.height < 1) return;
 
@@ -356,42 +496,80 @@ export function HeroFieldXBackground() {
     const resize = () => {
       const width = Math.max(1, root.clientWidth);
       const height = Math.max(1, root.clientHeight);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(getCappedPixelRatio(renderProfile, width));
       renderer.setSize(width, height, false);
       uniforms.uResolution.value.set(width, height);
       const mobileScale = width <= 640 ? 0.78 : width <= 980 ? 0.9 : 1;
-      uniforms.uIntensity.value = Math.min(1, width / 1120) * mobileScale;
-      const blobCountCap = reduceMotion.matches ? (width <= 640 ? 4 : 5) : width <= 640 ? 5 : blobLayout.activeCount;
-      const blobCountFloor = reduceMotion.matches ? 3 : 4;
+      uniforms.uIntensity.value = Math.min(1, width / 1120) * mobileScale * renderProfile.intensityScale;
+      const blobCountCap = reduceMotion.matches
+        ? Math.min(renderProfile.maxBlobs, width <= 640 ? 4 : 5)
+        : width <= 640
+          ? Math.min(renderProfile.maxBlobs, 5)
+          : renderProfile.maxBlobs;
+      const blobCountFloor = Math.min(reduceMotion.matches ? 3 : 4, renderProfile.maxBlobs);
       uniforms.uBlobCount.value = THREE.MathUtils.clamp(blobLayout.activeCount, blobCountFloor, blobCountCap);
-      uniforms.uThreshold.value = width <= 640 ? 1.34 : 1.26;
+      uniforms.uThreshold.value = width <= 640 ? getBaseThreshold(renderProfile.maxBlobs) + 0.08 : getBaseThreshold(renderProfile.maxBlobs);
       uniforms.uEdgeSoftness.value = width <= 640 ? 0.11 : 0.09;
       updateOriginFromHeading();
       updateScrollProgress();
       renderer.render(scene, camera);
+      root.dataset.webgl = "active";
     };
 
     resize();
-    const observer = new ResizeObserver(resize);
-    observer.observe(sectionEl);
+    const resizeObserver = new ResizeObserver(resize);
+    resizeObserver.observe(sectionEl);
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll, { passive: true });
 
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry?.isIntersecting ?? true;
+
+        if (!document.hidden && isVisible) {
+          updateScrollProgress();
+          resize();
+          lastRenderTime = 0;
+        }
+      },
+      { threshold: 0.01 },
+    );
+    intersectionObserver.observe(sectionEl);
+
+    const onVisibilityChange = () => {
+      if (!document.hidden) {
+        updateScrollProgress();
+        resize();
+        lastRenderTime = 0;
+      }
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
     const clock = new THREE.Clock();
-    const renderFrame = () => {
-      const elapsed = clock.getElapsedTime();
-      uniforms.uTime.value = elapsed;
-      scrollCurrent = THREE.MathUtils.lerp(scrollCurrent, scrollTarget, HERO_FIELD_X_CONFIG.scrollDamping);
-      uniforms.uScrollProgress.value = scrollCurrent;
-      renderer.render(scene, camera);
+    const frameBudget = 1000 / renderProfile.targetFps;
+    const renderFrame = (timestamp: number) => {
+      const shouldRender = isVisible && !document.hidden;
+
+      if (shouldRender && (lastRenderTime === 0 || timestamp - lastRenderTime >= frameBudget)) {
+        lastRenderTime = timestamp;
+        const elapsed = clock.getElapsedTime();
+        uniforms.uTime.value = elapsed;
+        scrollCurrent = THREE.MathUtils.lerp(scrollCurrent, scrollTarget, HERO_FIELD_X_CONFIG.scrollDamping);
+        uniforms.uScrollProgress.value = scrollCurrent;
+        renderer.render(scene, camera);
+      }
+
       rafRef.current = window.requestAnimationFrame(renderFrame);
     };
 
-    renderFrame();
+    rafRef.current = window.requestAnimationFrame(renderFrame);
 
     const onMotionChange = (event: MediaQueryListEvent) => {
       uniforms.uMotion.value = event.matches ? 0.2 : 1;
-      uniforms.uIntensity.value = event.matches ? Math.min(uniforms.uIntensity.value, 0.5) : Math.min(1, root.clientWidth / 1120);
+      uniforms.uIntensity.value = event.matches
+        ? Math.min(uniforms.uIntensity.value, 0.5)
+        : Math.min(1, root.clientWidth / 1120) * renderProfile.intensityScale;
       resize();
     };
 
@@ -399,9 +577,14 @@ export function HeroFieldXBackground() {
 
     return () => {
       reduceMotion.removeEventListener("change", onMotionChange);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      observer.disconnect();
+      intersectionObserver.disconnect();
+      resizeObserver.disconnect();
+      if (recoveryTimer !== null) {
+        window.clearTimeout(recoveryTimer);
+      }
       if (rafRef.current !== null) {
         window.cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
@@ -415,7 +598,7 @@ export function HeroFieldXBackground() {
         root.removeChild(canvas);
       }
     };
-  }, []);
+  }, [renderProfileIndex]);
 
   return <div className="fx-hero-radial-bg" aria-hidden="true" ref={rootRef} />;
 }
