@@ -316,6 +316,7 @@
 }
 
 .fx-section-title,
+.fx-page-title,
 .fx-hero-title {
   margin: 0;
   font-family: var(--fx-font-display);
@@ -327,6 +328,13 @@
 .fx-section-title {
   font-size: var(--fx-fs-section-title);
   max-width: 16ch;
+}
+
+.fx-page-title {
+  font-size: var(--fx-fs-page-title);
+  max-width: 18ch;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .fx-hero-title {
@@ -614,6 +622,9 @@
 .fx-hero-title-line {
   --fx-hero-line-delay: calc(var(--fx-hero-line-index) * 320ms);
   display: block;
+}
+
+.fx-hero-organism:not(.is-ready) .fx-hero-title-line {
   opacity: 0;
   transform: translateX(-44px);
   clip-path: inset(0 100% 0 0);

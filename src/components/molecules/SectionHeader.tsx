@@ -6,6 +6,7 @@ type SectionHeaderProps = {
   titleId: string;
   kicker?: string;
   level?: "h1" | "h2" | "h3";
+  variant?: "default" | "hero";
   className?: string;
   anchorHref?: string;
   anchorLabel?: string;
@@ -16,18 +17,21 @@ export function SectionHeader({
   titleId,
   kicker,
   level = "h2",
+  variant = "default",
   className,
   anchorHref,
   anchorLabel
 }: SectionHeaderProps) {
-  const titleLines = level === "h1" ? title.split("\n") : null;
+  const isHeroVariant = variant === "hero";
+  const titleLines = isHeroVariant ? title.split("\n") : null;
   const getHeroLineStyle = (index: number) => ({ ["--fx-hero-line-index"]: index }) as CSSProperties;
+  const titleClassName = isHeroVariant ? "fx-hero-title" : level === "h1" ? "fx-page-title" : "fx-section-title";
 
   return (
     <header className={className ?? "fx-section-header"}>
       {kicker ? <SectionKicker text={kicker} /> : null}
       <div className="fx-section-title-row">
-        <SectionTitle as={level} id={titleId} className={level === "h1" ? "fx-hero-title" : "fx-section-title"}>
+        <SectionTitle as={level} id={titleId} className={titleClassName}>
           {titleLines
             ? titleLines.map((line, index) => (
                 <span

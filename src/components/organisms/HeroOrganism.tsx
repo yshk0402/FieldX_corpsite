@@ -44,7 +44,7 @@ export function HeroOrganism({ sectionId, title, body }: HeroOrganismProps) {
       <HeroFieldXBackground />
       <div className="fx-shell fx-hero-grid fx-hero-grid--single">
         <div className="fx-hero-copy">
-          <SectionHeader title={title} titleId="home-hero-title" level="h1" />
+          <SectionHeader title={title} titleId="home-hero-title" level="h1" variant="hero" />
           {body ? <BodyText className="fx-hero-body">{body}</BodyText> : null}
           <ScrollHint />
         </div>
