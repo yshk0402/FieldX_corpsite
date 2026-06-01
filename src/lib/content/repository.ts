@@ -5,8 +5,8 @@ import matter from "gray-matter";
 import { z } from "zod";
 
 import {
-  getMicrocmsClient,
   getMicrocmsColumnEndpoint,
+  getMicrocmsListContents,
   getMicrocmsManagementContents
 } from "@/lib/content/microcms";
 import { publishedNewsPosts } from "@/lib/news";
@@ -243,7 +243,7 @@ function isPublishedMicrocmsContent(content: MicrocmsManagementContent): boolean
   );
 }
 
-async function getPublishedMicrocmsContentIds(endpoint: string): Promise<Set<string> | null> {
+async function getPublishedMicrocmsContentIds(endpoint: string): Promise<Set<string>> {
   const ids = new Set<string>();
   let offset = 0;
   const limit = 100;
@@ -274,9 +274,9 @@ async function getPublishedMicrocmsContentIds(endpoint: string): Promise<Set<str
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.warn(
-      `[microCMS] Failed to fetch publication status from Management API. Falling back to Content API publishedAt filtering. Original error: ${message}`
+      `[microCMS] Failed to fetch publication status from Management API. Hiding Column posts to avoid exposing stopped or unpublished content. Original error: ${message}`
     );
-    return null;
+    return new Set<string>();
   }
 }
 
@@ -285,7 +285,6 @@ const loadColumnPosts = cache(async (): Promise<ColumnPost[]> => {
     return [];
   }
 
-  const client = getMicrocmsClient();
   const endpoint = getMicrocmsColumnEndpoint();
   const posts: MicrocmsBlogResponse[] = [];
   let offset = 0;
@@ -293,11 +292,8 @@ const loadColumnPosts = cache(async (): Promise<ColumnPost[]> => {
 
   try {
     while (true) {
-      const response = await client.getList<MicrocmsBlogResponse>({
+      const response = await getMicrocmsListContents<MicrocmsBlogResponse>({
         endpoint,
-        customRequestInit: {
-          cache: "no-store"
-        },
         queries: {
           fields: "id,title,content,publishedAt,eyecatch,category",
           orders: "-publishedAt",
@@ -322,9 +318,7 @@ const loadColumnPosts = cache(async (): Promise<ColumnPost[]> => {
   }
 
   const publishedContentIds = await getPublishedMicrocmsContentIds(endpoint);
-  const publicPosts = publishedContentIds
-    ? posts.filter((post) => publishedContentIds.has(post.id))
-    : posts;
+  const publicPosts = posts.filter((post) => publishedContentIds.has(post.id));
 
   return publicPosts.map((post) => {
     const article = buildColumnBodyWithToc(post.content);
