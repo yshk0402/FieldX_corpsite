@@ -5,7 +5,8 @@ import { ColumnMagazineTemplate } from "@/components/templates";
 import { getColumnPosts } from "@/lib/content/repository";
 import { defaultOgImage } from "@/lib/metadata";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "マガジン",

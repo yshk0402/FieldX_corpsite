@@ -4,7 +4,11 @@ import { cache } from "react";
 import matter from "gray-matter";
 import { z } from "zod";
 
-import { getMicrocmsClient, getMicrocmsColumnEndpoint } from "@/lib/content/microcms";
+import {
+  getMicrocmsClient,
+  getMicrocmsColumnEndpoint,
+  getMicrocmsManagementContents
+} from "@/lib/content/microcms";
 import { publishedNewsPosts } from "@/lib/news";
 import type {
   ColumnPost,
@@ -89,6 +93,21 @@ const microcmsBlogSchema = z.object({
 });
 
 type MicrocmsBlogResponse = z.infer<typeof microcmsBlogSchema>;
+
+const microcmsManagementStatusSchema = z.enum([
+  "DRAFT",
+  "PUBLISH",
+  "CLOSED",
+  "PUBLISH_AND_DRAFT"
+]);
+
+const microcmsManagementContentSchema = z.object({
+  id: z.string().min(1),
+  closedAt: z.string().nullable().optional(),
+  status: z.array(microcmsManagementStatusSchema).optional()
+});
+
+type MicrocmsManagementContent = z.infer<typeof microcmsManagementContentSchema>;
 
 function hasMicrocmsConfig(): boolean {
   return Boolean(process.env.MICROCMS_SERVICE_DOMAIN && process.env.MICROCMS_API_KEY);
@@ -216,6 +235,51 @@ function isPublishedColumnPost(post: ColumnPost): boolean {
   return Boolean(post.publishedAt);
 }
 
+function isPublishedMicrocmsContent(content: MicrocmsManagementContent): boolean {
+  const statuses = content.status ?? [];
+  return (
+    !content.closedAt &&
+    (statuses.includes("PUBLISH") || statuses.includes("PUBLISH_AND_DRAFT"))
+  );
+}
+
+async function getPublishedMicrocmsContentIds(endpoint: string): Promise<Set<string> | null> {
+  const ids = new Set<string>();
+  let offset = 0;
+  const limit = 100;
+
+  try {
+    while (true) {
+      const response = await getMicrocmsManagementContents<unknown>({
+        endpoint,
+        limit,
+        offset
+      });
+      const contents = response.contents.map((item) => microcmsManagementContentSchema.parse(item));
+
+      for (const content of contents) {
+        if (isPublishedMicrocmsContent(content)) {
+          ids.add(content.id);
+        }
+      }
+
+      offset += contents.length;
+
+      if (offset >= response.totalCount || contents.length === 0) {
+        break;
+      }
+    }
+
+    return ids;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    console.warn(
+      `[microCMS] Failed to fetch publication status from Management API. Falling back to Content API publishedAt filtering. Original error: ${message}`
+    );
+    return null;
+  }
+}
+
 const loadColumnPosts = cache(async (): Promise<ColumnPost[]> => {
   if (!hasMicrocmsConfig()) {
     return [];
@@ -231,6 +295,9 @@ const loadColumnPosts = cache(async (): Promise<ColumnPost[]> => {
     while (true) {
       const response = await client.getList<MicrocmsBlogResponse>({
         endpoint,
+        customRequestInit: {
+          cache: "no-store"
+        },
         queries: {
           fields: "id,title,content,publishedAt,eyecatch,category",
           orders: "-publishedAt",
@@ -254,7 +321,12 @@ const loadColumnPosts = cache(async (): Promise<ColumnPost[]> => {
     );
   }
 
-  return posts.map((post) => {
+  const publishedContentIds = await getPublishedMicrocmsContentIds(endpoint);
+  const publicPosts = publishedContentIds
+    ? posts.filter((post) => publishedContentIds.has(post.id))
+    : posts;
+
+  return publicPosts.map((post) => {
     const article = buildColumnBodyWithToc(post.content);
 
     return {
