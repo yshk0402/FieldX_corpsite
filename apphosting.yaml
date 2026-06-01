@@ -40,6 +40,12 @@ env:
       - BUILD
       - RUNTIME
 
+  - variable: MICROCMS_MANAGEMENT_API_KEY
+    secret: fieldx-corporate-microcms-management-api-key
+    availability:
+      - BUILD
+      - RUNTIME
+
   - variable: MICROCMS_COLUMN_ENDPOINT
     value: column
     availability:
