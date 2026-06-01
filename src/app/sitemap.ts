@@ -3,7 +3,8 @@ import type { MetadataRoute } from "next";
 import { getAllPublishedRoutes } from "@/lib/content/repository";
 import { getSiteUrl } from "@/lib/site-url";
 
-export const revalidate = 300;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const siteUrl = getSiteUrl();

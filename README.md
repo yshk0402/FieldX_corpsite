@@ -31,6 +31,8 @@ Set the following in `.env.local` or Vercel environment variables:
 MICROCMS_SERVICE_DOMAIN=your-service-domain
 MICROCMS_API_KEY=your-api-key
 MICROCMS_COLUMN_ENDPOINT=column
+# Optional: use a separate server-only key with Management API read permission
+MICROCMS_MANAGEMENT_API_KEY=your-management-api-key
 ```
 
 Expected content model fields for the Column API:
@@ -42,7 +44,8 @@ Expected content model fields for the Column API:
 Notes:
 - URL slug is currently derived from the `microCMS` content ID.
 - Description text is generated from the `content` body.
-- Production `MICROCMS_API_KEY` should be a read-only Content API key without draft retrieval permissions. If the key can read drafts, `/column` may expose unpublished entries unless they are filtered server-side.
+- Production `MICROCMS_API_KEY` should be a read-only Content API key without draft retrieval permissions.
+- If `MICROCMS_MANAGEMENT_API_KEY` is set, `/column` cross-checks Management API metadata and only renders entries whose status is `PUBLISH` or `PUBLISH_AND_DRAFT` and whose `closedAt` is empty. This prevents previously published but now stopped entries from remaining visible when an over-broad Content API key can still read them.
 
 ## GTM / GA4
 Set the GTM container ID and canonical site URL in `.env.local` or Vercel environment variables.
