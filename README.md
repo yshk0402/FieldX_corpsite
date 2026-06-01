@@ -45,7 +45,8 @@ Notes:
 - URL slug is currently derived from the `microCMS` content ID.
 - Description text is generated from the `content` body.
 - Production `MICROCMS_API_KEY` should be a read-only Content API key without draft retrieval permissions.
-- If `MICROCMS_MANAGEMENT_API_KEY` is set, `/column` cross-checks Management API metadata and only renders entries whose status is `PUBLISH` or `PUBLISH_AND_DRAFT` and whose `closedAt` is empty. This prevents previously published but now stopped entries from remaining visible when an over-broad Content API key can still read them.
+- `/column` cross-checks Management API metadata and only renders entries whose status is `PUBLISH` or `PUBLISH_AND_DRAFT` and whose `closedAt` is empty. This prevents previously published but now stopped entries from remaining visible when an over-broad Content API key can still read them.
+- If Management API metadata cannot be fetched, Column posts are hidden instead of falling back to `publishedAt` only. Set `MICROCMS_MANAGEMENT_API_KEY` with Management API read permission in production.
 
 ## GTM / GA4
 Set the GTM container ID and canonical site URL in `.env.local` or Vercel environment variables.
