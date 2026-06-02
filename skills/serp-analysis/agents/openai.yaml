@@ -1,4 +1,0 @@
-interface:
-  display_name: "SERP分析"
-  short_description: "検索結果を読み解き競合・意図・不足論点を整理する skill"
-  default_prompt: "$serp-analysis を使って、このキーワードの現行 SERP と検索意図を整理して。"

@@ -1,4 +1,0 @@
-interface:
-  display_name: "SEO記事パイプライン"
-  short_description: "企画前に公開記事確認を行い、必要時のみ委譲しながら記事制作を進める skill"
-  default_prompt: "$seo-column-pipeline を使って、このテーマの日本語コラム記事を、企画前の公開記事確認から初稿、CTA、QA まで進めて。"

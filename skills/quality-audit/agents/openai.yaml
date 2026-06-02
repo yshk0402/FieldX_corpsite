@@ -1,4 +1,0 @@
-interface:
-  display_name: "品質監査"
-  short_description: "公開前にSEO・正確性・訴求品質を監査する skill"
-  default_prompt: "$quality-audit を使って、この記事を公開前に監査して。"
