@@ -1,4 +1,0 @@
-interface:
-  display_name: "構成設計"
-  short_description: "公開記事確認済みの brief から内部回遊込みで構成を設計する skill"
-  default_prompt: "$content-outline を使って、この brief と公開記事スナップショットから記事構成を作って。"

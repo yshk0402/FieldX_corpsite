@@ -1,4 +1,0 @@
-interface:
-  display_name: "CV導線設計"
-  short_description: "記事末尾の訴求とCTA導線、公開記事への回遊を文脈に合わせて設計する skill"
-  default_prompt: "$conversion-cta を使って、この記事に合う CTA と公開記事への回遊導線を設計して。"

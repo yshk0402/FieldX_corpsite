@@ -1,4 +1,0 @@
-interface:
-  display_name: "キーワード戦略"
-  short_description: "公開記事確認済みの前提で狙い語と記事化優先度を整理する skill"
-  default_prompt: "$keyword-strategy を使って、公開記事スナップショットを踏まえ、このテーマで狙うべきキーワード群と記事化優先度を整理して。"

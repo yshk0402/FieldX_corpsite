@@ -1,4 +1,0 @@
-interface:
-  display_name: "SEOライター"
-  short_description: "SEO・AIO・GEOを踏まえて記事本文を書き切る skill"
-  default_prompt: "$seo-writer を使って、この承認済み構成から日本語のコラム記事を書いて。"

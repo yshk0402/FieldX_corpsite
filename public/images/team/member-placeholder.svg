@@ -1,8 +1,0 @@
-<svg width="640" height="640" viewBox="0 0 640 640" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
-  <title id="title">Team member placeholder</title>
-  <desc id="desc">Abstract profile placeholder with gradient background.</desc>
-  <rect width="640" height="640" rx="48" fill="#F6F1EF"/>
-  <circle cx="320" cy="240" r="110" fill="#D8D0CD"/>
-  <path d="M130 530C130 426.171 214.171 342 318 342H322C425.829 342 510 426.171 510 530V548H130V530Z" fill="#C9C1BE"/>
-  <path d="M466.5 181C466.5 262.462 400.462 328.5 319 328.5C237.538 328.5 171.5 262.462 171.5 181C171.5 99.538 237.538 33.5 319 33.5C400.462 33.5 466.5 99.538 466.5 181Z" stroke="#E10600" stroke-opacity="0.18" stroke-width="3"/>
-</svg>
