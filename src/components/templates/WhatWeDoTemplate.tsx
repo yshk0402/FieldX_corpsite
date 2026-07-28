@@ -1,54 +1,40 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { HomeContactCtaOrganism } from "@/components/organisms";
-import type { SiteLocaleContent } from "@/components/site/content";
-
-type WhatWeDoTemplateProps = {
-  content: SiteLocaleContent;
-};
-
 const agentProducts = [
   {
     title: "AIコールエージェント",
     body: "見込み客や入居者からの電話に応対する。",
-    href: "/service/ai-call-agent",
     icon: "/images/services/agents/call-agent.svg"
   },
   {
     title: "AIチャットエージェント",
     body: "見込み客や入居者からのメールやチャットの返信をAIが応対する。",
-    href: "/service/ai-chat-agent",
     icon: "/images/services/agents/chat-agent.svg"
   },
   {
     title: "オーナーエージェント",
     body: "オーナー様訪問前に確認するべき社内情報をまとめる。",
-    href: "/service/owner-agent",
     icon: "/images/services/agents/owner-agent.svg"
   },
   {
     title: "AI Docs エージェント",
     body: "各種契約書などの煩雑な書類作成をAIが完了する。",
-    href: "/service/ai-docs-agent",
     icon: "/images/services/agents/docs-agent.svg"
   },
   {
     title: "退去手続きエージェント",
     body: "退去連絡から退去完了までの一連の業務をAIが支援する。",
-    href: "/service/move-out-agent",
     icon: "/images/services/agents/move-out-agent.svg"
   },
   {
     title: "更新案内エージェント",
     body: "契約更新対象者への連絡・リマインドを定期的に実行する。",
-    href: "/service/renewal-agent",
     icon: "/images/services/agents/renewal-agent.svg"
   },
   {
     title: "大規模修繕エージェント",
     body: "水回りからリノベーションまで、修繕提案をAIが支援する。",
-    href: "/service/large-scale-repair-agent",
     icon: "/images/services/agents/repair-agent.svg"
   }
 ] as const;
@@ -69,7 +55,7 @@ function CtaLink({
   );
 }
 
-export function WhatWeDoTemplate({ content }: WhatWeDoTemplateProps) {
+export function WhatWeDoTemplate() {
   return (
     <>
       <section className="fx-service-page-hero" aria-labelledby="service-page-title">
@@ -80,7 +66,8 @@ export function WhatWeDoTemplate({ content }: WhatWeDoTemplateProps) {
           <p className="fx-service-page-lead">
             Field Xは賃貸管理業務に特化したAIエージェントカンパニーです。
             <br />
-            Field XのAIエージェントがどのように、賃貸管理業務を支援し成果をもたらすのかご覧ください。
+            Field
+            XのAIエージェントがどのように、賃貸管理業務を支援し成果をもたらすのかご覧ください。
           </p>
           <div className="fx-service-page-hero-actions">
             <CtaLink href="/contact">まずは相談する</CtaLink>
@@ -124,9 +111,6 @@ export function WhatWeDoTemplate({ content }: WhatWeDoTemplateProps) {
                   <div className="fx-service-page-agent-copy">
                     <h4 className="fx-service-page-agent-title">{product.title}</h4>
                     <p className="fx-service-page-agent-body">{product.body}</p>
-                    <Link href={product.href} className="fx-service-page-agent-link">
-                      もっと詳しく知る
-                    </Link>
                   </div>
                 </article>
               ))}
@@ -156,32 +140,8 @@ export function WhatWeDoTemplate({ content }: WhatWeDoTemplateProps) {
               />
             </div>
           </section>
-
-          <section className="fx-service-page-crm" aria-labelledby="service-crm-title">
-            <h3 id="service-crm-title" className="fx-service-page-crm-title">
-              <span>全てが揃ったAIネイティブな</span>
-              <span>CRM</span>
-            </h3>
-            <p className="fx-service-page-crm-body">
-              FieldCRMは賃貸管理業務に必要な機能とそれらを支援するAIエージェントを標準搭載した、
-              <br />
-              賃貸管理業者向けのAIネイティブなCRMです。
-              <br />
-              Field XのAIエージェントは既存のCRMと連携して利用することも可能ですが、
-              <br />
-              Field CRMへの移行でより強力な効果を発揮します。
-            </p>
-            <CtaLink href="/contact?intent=materials">詳細をみる</CtaLink>
-            <div className="fx-service-page-crm-media" aria-hidden="true" />
-          </section>
         </div>
       </section>
-
-      <HomeContactCtaOrganism
-        sectionId="contact"
-        titleId="service-contact-title"
-        cards={content.contact.cards}
-      />
     </>
   );
 }

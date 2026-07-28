@@ -6,6 +6,7 @@ export const leadCreateInputSchema = z.object({
   company: z.string().trim().max(120).optional().default(""),
   name: z.string().trim().min(1).max(80),
   email: z.string().trim().email(),
+  phone: z.string().trim().max(30).optional().default(""),
   inquiryType: z.enum(["project", "partnership", "media", "other"]),
   awarenessSources: z.array(z.enum(["x", "google", "event", "ai"])).optional(),
   message: z.string().trim().min(10).max(2000),

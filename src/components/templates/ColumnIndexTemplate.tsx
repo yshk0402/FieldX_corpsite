@@ -1,12 +1,5 @@
 import Link from "next/link";
 
-import { HomeContactCtaOrganism } from "@/components/organisms";
-import type { SiteLocaleContent } from "@/components/site/content";
-
-type ColumnIndexTemplateProps = {
-  content: SiteLocaleContent;
-};
-
 const columnHubItems = [
   {
     href: "/column/magazine",
@@ -24,7 +17,7 @@ const columnHubItems = [
   }
 ] as const;
 
-export function ColumnIndexTemplate({ content }: ColumnIndexTemplateProps) {
+export function ColumnIndexTemplate() {
   return (
     <>
       <section className="fx-column-page-hero" aria-labelledby="column-page-title">
@@ -71,12 +64,6 @@ export function ColumnIndexTemplate({ content }: ColumnIndexTemplateProps) {
           </ul>
         </div>
       </section>
-
-      <HomeContactCtaOrganism
-        sectionId="contact"
-        titleId="column-contact-title"
-        cards={content.contact.cards}
-      />
     </>
   );
 }

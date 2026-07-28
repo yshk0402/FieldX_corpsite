@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { HomeContactCtaOrganism } from "@/components/organisms";
 import { NewsCard } from "@/components/molecules";
 import type { SiteLocaleContent } from "@/components/site/content";
 import type { ColumnPost } from "@/types/content";
@@ -19,9 +18,7 @@ export function NewsTemplate({ content, posts, postHrefBasePath = "/news" }: New
           <h1 id="news-page-title" className="fx-news-page-title">
             NEWS
           </h1>
-          <p className="fx-news-page-lead">
-            Field Xのプレスリリースや最新情報をお届けします。
-          </p>
+          <p className="fx-news-page-lead">Field Xのプレスリリースや最新情報をお届けします。</p>
           <div className="fx-news-page-hero-actions">
             <Link href="/contact" className="fx-news-page-primary-link">
               まずは相談する
@@ -53,12 +50,6 @@ export function NewsTemplate({ content, posts, postHrefBasePath = "/news" }: New
           )}
         </div>
       </section>
-
-      <HomeContactCtaOrganism
-        sectionId="contact"
-        titleId="news-contact-title"
-        cards={content.contact.cards}
-      />
     </>
   );
 }

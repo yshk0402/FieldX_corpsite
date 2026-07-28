@@ -6,6 +6,7 @@ type SupabaseLeadInsert = {
   company: string;
   name: string;
   email: string;
+  phone: string;
   inquiry_type: LeadCreateInput["inquiryType"];
   message: string;
   page_path: string;
@@ -37,6 +38,7 @@ function buildLeadInsert(input: LeadCreateInput): SupabaseLeadInsert {
     company: input.company,
     name: input.name,
     email: input.email,
+    phone: input.phone,
     inquiry_type: input.inquiryType,
     message: input.message,
     page_path: input.pagePath,
@@ -83,6 +85,7 @@ export async function saveLead(input: LeadCreateInput): Promise<LeadRecord | nul
     company: string;
     name: string;
     email: string;
+    phone: string;
     inquiry_type: LeadCreateInput["inquiryType"];
     message: string;
     page_path: string;
@@ -110,6 +113,7 @@ export async function saveLead(input: LeadCreateInput): Promise<LeadRecord | nul
     company: row.company,
     name: row.name,
     email: row.email,
+    phone: row.phone,
     inquiryType: row.inquiry_type,
     message: row.message,
     pagePath: row.page_path,

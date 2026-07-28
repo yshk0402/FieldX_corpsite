@@ -11,6 +11,7 @@ type SupabaseLeadRow = {
   company: string;
   name: string;
   email: string;
+  phone: string;
   inquiry_type: LeadCreateInput["inquiryType"];
   message: string;
   page_path: string;
@@ -129,6 +130,7 @@ function mapLeadRow(row: SupabaseLeadRow): LeadRecord {
     company: row.company,
     name: row.name,
     email: row.email,
+    phone: row.phone,
     inquiryType: row.inquiry_type,
     message: row.message,
     pagePath: row.page_path,
@@ -148,7 +150,7 @@ function mapLeadRow(row: SupabaseLeadRow): LeadRecord {
 export async function getLeadById(id: string): Promise<LeadRecord | null> {
   const rows = await supabaseGet<SupabaseLeadRow[]>(LEADS_TABLE, {
     select:
-      "id,created_at,company,name,email,inquiry_type,message,page_path,page_title,referrer,utm_source,utm_medium,utm_campaign,utm_content,utm_term,ga_client_id,status,notes",
+      "id,created_at,company,name,email,phone,inquiry_type,message,page_path,page_title,referrer,utm_source,utm_medium,utm_campaign,utm_content,utm_term,ga_client_id,status,notes",
     id: `eq.${id}`,
     limit: 1
   });
@@ -159,7 +161,7 @@ export async function getLeadById(id: string): Promise<LeadRecord | null> {
 export async function getLeads(filters: LeadListFilters = {}): Promise<LeadRecord[]> {
   const params: Record<string, string | number | undefined> = {
     select:
-      "id,created_at,company,name,email,inquiry_type,message,page_path,page_title,referrer,utm_source,utm_medium,utm_campaign,utm_content,utm_term,ga_client_id,status,notes",
+      "id,created_at,company,name,email,phone,inquiry_type,message,page_path,page_title,referrer,utm_source,utm_medium,utm_campaign,utm_content,utm_term,ga_client_id,status,notes",
     order: "created_at.desc",
     limit: filters.limit ?? DEFAULT_LIST_LIMIT
   };
@@ -209,7 +211,9 @@ export async function getLeadDailySummary(
   }));
 }
 
-export async function getLeadPageSummary(limit = DEFAULT_SUMMARY_LIMIT): Promise<LeadPageSummaryRecord[]> {
+export async function getLeadPageSummary(
+  limit = DEFAULT_SUMMARY_LIMIT
+): Promise<LeadPageSummaryRecord[]> {
   const rows = await supabaseGet<SupabaseLeadPageSummaryRow[]>("lead_page_summary", {
     select: "*",
     order: "lead_count.desc",

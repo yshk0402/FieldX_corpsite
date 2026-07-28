@@ -3,7 +3,12 @@
 import { useRef, useState } from "react";
 import { z } from "zod";
 
-import { getAttributionContext, getCurrentPagePath, trackCtaClick, trackEvent } from "@/lib/analytics";
+import {
+  getAttributionContext,
+  getCurrentPagePath,
+  trackCtaClick,
+  trackEvent
+} from "@/lib/analytics";
 
 const inquiryTypeOptions = [
   { value: "project", label: "導入・ご相談" },
@@ -21,13 +26,30 @@ const awarenessSourceOptions = [
 
 const contactFormSchema = z.object({
   company: z.string().trim().max(120, "会社名は120文字以内で入力してください。").optional(),
-  lastName: z.string().trim().min(1, "姓を入力してください。").max(40, "姓は40文字以内で入力してください。"),
-  firstName: z.string().trim().min(1, "名を入力してください。").max(40, "名は40文字以内で入力してください。"),
+  lastName: z
+    .string()
+    .trim()
+    .min(1, "姓を入力してください。")
+    .max(40, "姓は40文字以内で入力してください。"),
+  firstName: z
+    .string()
+    .trim()
+    .min(1, "名を入力してください。")
+    .max(40, "名は40文字以内で入力してください。"),
   email: z
     .string()
     .trim()
     .min(1, "メールアドレスを入力してください。")
     .email("有効なメールアドレスを入力してください。"),
+  phone: z
+    .string()
+    .trim()
+    .min(1, "電話番号を入力してください。")
+    .max(30, "電話番号は30文字以内で入力してください。")
+    .refine((value) => {
+      const digitCount = value.replace(/\D/g, "").length;
+      return digitCount >= 10 && digitCount <= 15;
+    }, "有効な電話番号を入力してください。"),
   inquiryType: z.enum(inquiryTypeOptions.map((option) => option.value) as [string, ...string[]], {
     errorMap: () => ({ message: "お問い合わせ種別を選択してください。" })
   }),
@@ -51,6 +73,7 @@ const initialValues: ContactFormValues = {
   lastName: "",
   firstName: "",
   email: "",
+  phone: "",
   inquiryType: inquiryTypeOptions[0].value,
   awarenessSources: [],
   message: ""
@@ -82,7 +105,10 @@ export function ContactForm() {
     setStatusMessage("");
   }
 
-  function handleAwarenessSourceChange(source: ContactFormValues["awarenessSources"][number], isChecked: boolean) {
+  function handleAwarenessSourceChange(
+    source: ContactFormValues["awarenessSources"][number],
+    isChecked: boolean
+  ) {
     trackFormStart();
     setValues((current) => {
       const nextSources = isChecked
@@ -135,6 +161,7 @@ export function ContactForm() {
           company: result.data.company,
           name: `${result.data.lastName} ${result.data.firstName}`.trim(),
           email: result.data.email,
+          phone: result.data.phone,
           inquiryType: result.data.inquiryType,
           awarenessSources: result.data.awarenessSources,
           message: result.data.message,
@@ -178,7 +205,12 @@ export function ContactForm() {
 
   return (
     <div className="fx-contact-form-block">
-      <form className="fx-contact-form" onSubmit={handleSubmit} noValidate onFocusCapture={trackFormStart}>
+      <form
+        className="fx-contact-form"
+        onSubmit={handleSubmit}
+        noValidate
+        onFocusCapture={trackFormStart}
+      >
         <div className="fx-contact-form-grid">
           <div className="fx-contact-field">
             <label className="fx-contact-label" htmlFor="contact-company">
@@ -276,6 +308,31 @@ export function ContactForm() {
           </div>
 
           <div className="fx-contact-field">
+            <label className="fx-contact-label" htmlFor="contact-phone">
+              電話番号<span className="fx-contact-required">必須</span>
+            </label>
+            <input
+              id="contact-phone"
+              name="phone"
+              className="fx-contact-input"
+              data-clarity-mask="true"
+              type="tel"
+              autoComplete="tel"
+              inputMode="tel"
+              placeholder="例：03-1234-5678"
+              value={values.phone}
+              onChange={(event) => handleChange("phone", event.target.value)}
+              aria-describedby={errors.phone ? "contact-phone-error" : undefined}
+              aria-invalid={errors.phone ? "true" : undefined}
+            />
+            {errors.phone ? (
+              <p id="contact-phone-error" className="fx-contact-error" role="alert">
+                {errors.phone}
+              </p>
+            ) : null}
+          </div>
+
+          <div className="fx-contact-field">
             <label className="fx-contact-label" htmlFor="contact-type">
               お問い合わせ種別<span className="fx-contact-required">必須</span>
             </label>
@@ -315,7 +372,9 @@ export function ContactForm() {
                   name="awarenessSources"
                   value={option.value}
                   checked={values.awarenessSources.includes(option.value)}
-                  onChange={(event) => handleAwarenessSourceChange(option.value, event.target.checked)}
+                  onChange={(event) =>
+                    handleAwarenessSourceChange(option.value, event.target.checked)
+                  }
                 />
                 <span>{option.label}</span>
               </label>
@@ -353,8 +412,7 @@ export function ContactForm() {
             {isSubmitting ? "送信中..." : "送信する"}
           </button>
           <p className="fx-contact-direct-link">
-            メールソフトを使わず直接連絡する場合:
-            {" "}
+            メールソフトを使わず直接連絡する場合:{" "}
             <a
               href="mailto:hello@fieldx.site"
               onClick={() =>

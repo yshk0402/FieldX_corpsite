@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { HomeContactCtaOrganism } from "@/components/organisms";
 import { NewsCard } from "@/components/molecules";
 import type { SiteLocaleContent } from "@/components/site/content";
 import type { ColumnPost } from "@/types/content";
@@ -52,12 +51,6 @@ export function ColumnMagazineTemplate({ content, posts }: ColumnMagazineTemplat
           )}
         </div>
       </section>
-
-      <HomeContactCtaOrganism
-        sectionId="contact"
-        titleId="column-magazine-contact-title"
-        cards={content.contact.cards}
-      />
     </>
   );
 }

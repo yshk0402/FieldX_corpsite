@@ -106,7 +106,7 @@ server.registerTool(
   async ({ limit = 20, status, inquiry_type, utm_campaign, page_path }) => {
     const params = {
       select:
-        "id,created_at,company,name,email,inquiry_type,page_path,referrer,utm_source,utm_medium,utm_campaign,ga_client_id,status",
+        "id,created_at,company,name,email,phone,inquiry_type,page_path,referrer,utm_source,utm_medium,utm_campaign,ga_client_id,status",
       order: "created_at.desc",
       limit
     };

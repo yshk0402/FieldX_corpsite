@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { HomeContactCtaOrganism } from "@/components/organisms";
 import type { SiteLocaleContent } from "@/components/site/content";
 
 type AboutTemplateProps = {
@@ -177,12 +176,6 @@ export function AboutTemplate({ content }: AboutTemplateProps) {
           </ul>
         </div>
       </section>
-
-      <HomeContactCtaOrganism
-        sectionId="contact"
-        titleId="about-contact-title"
-        cards={content.contact.cards}
-      />
     </>
   );
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { siteContent } from "@/components/site/content";
 import { WhatWeDoTemplate } from "@/components/templates";
 import { defaultOgImage } from "@/lib/metadata";
 
@@ -28,5 +27,5 @@ export const metadata: Metadata = {
 };
 
 export default function ServicePage() {
-  return <WhatWeDoTemplate content={siteContent} />;
+  return <WhatWeDoTemplate />;
 }

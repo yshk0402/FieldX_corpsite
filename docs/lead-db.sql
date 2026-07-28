@@ -6,6 +6,7 @@ create table if not exists public.leads (
   company text not null default '',
   name text not null,
   email text not null,
+  phone text not null default '',
   inquiry_type text not null check (inquiry_type in ('project', 'partnership', 'media', 'other')),
   message text not null,
   page_path text not null default '',
@@ -20,6 +21,8 @@ create table if not exists public.leads (
   status text not null default 'new' check (status in ('new', 'contacted', 'qualified', 'lost')),
   notes text
 );
+
+alter table public.leads add column if not exists phone text not null default '';
 
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_page_path_idx on public.leads (page_path);
