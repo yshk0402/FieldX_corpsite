@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 
-import { siteContent } from "@/components/site/content";
 import { ColumnMaterialsTemplate } from "@/components/templates";
 import { defaultOgImage } from "@/lib/metadata";
 
@@ -25,5 +24,5 @@ export const metadata: Metadata = {
 };
 
 export default function ColumnMaterialsPage() {
-  return <ColumnMaterialsTemplate content={siteContent} />;
+  return <ColumnMaterialsTemplate />;
 }

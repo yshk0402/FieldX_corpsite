@@ -5083,7 +5083,7 @@
   align-items: center;
   gap: 0.45rem;
   margin-bottom: 0.4rem;
-  font-family: var(--fx-font-display);
+  font-family: var(--fx-font-body);
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0;
@@ -5230,6 +5230,7 @@
   min-height: 2.8rem;
   padding-inline: 1.1rem;
   border-radius: 10px;
+  font-family: var(--fx-font-body);
   letter-spacing: 0;
 }
 

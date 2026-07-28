@@ -1,12 +1,5 @@
 import Link from "next/link";
 
-import { HomeContactCtaOrganism } from "@/components/organisms";
-import type { SiteLocaleContent } from "@/components/site/content";
-
-type ColumnMaterialsTemplateProps = {
-  content: SiteLocaleContent;
-};
-
 const plannedMaterials = [
   {
     title: "AI活用最新事例集",
@@ -25,7 +18,7 @@ const plannedMaterials = [
   }
 ] as const;
 
-export function ColumnMaterialsTemplate({ content }: ColumnMaterialsTemplateProps) {
+export function ColumnMaterialsTemplate() {
   return (
     <>
       <section className="fx-column-page-hero" aria-labelledby="column-materials-title">
@@ -74,12 +67,6 @@ export function ColumnMaterialsTemplate({ content }: ColumnMaterialsTemplateProp
           </ul>
         </div>
       </section>
-
-      <HomeContactCtaOrganism
-        sectionId="contact"
-        titleId="column-materials-contact-title"
-        cards={content.contact.cards}
-      />
     </>
   );
 }

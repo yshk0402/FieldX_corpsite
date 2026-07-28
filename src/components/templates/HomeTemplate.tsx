@@ -1,7 +1,6 @@
 import {
   HeroOrganism,
   HomeColumnOrganism,
-  HomeContactCtaOrganism,
   HomeNewsOrganism,
   PoemOrganism,
   ServiceViewOrganism
@@ -77,8 +76,6 @@ export function HomeTemplate({ content, columnPosts, newsPosts }: HomeTemplatePr
         emptyLabel={content.news.empty}
         posts={newsPosts}
       />
-
-      <HomeContactCtaOrganism sectionId={SECTION_IDS.contact} cards={content.contact.cards} />
     </>
   );
 }

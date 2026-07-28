@@ -98,12 +98,6 @@ export function SiteFooter({ company }: SiteFooterProps) {
             <Link href="/contact" className="fx-site-footer-cta fx-site-footer-cta-primary">
               まずは相談する
             </Link>
-            <Link
-              href="/contact?intent=materials"
-              className="fx-site-footer-cta fx-site-footer-cta-secondary"
-            >
-              資料を請求する
-            </Link>
           </div>
         </div>
       </div>
